@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to GIS scripting</title>
+    <meta charset="utf-8">
+      <link rel="stylesheet" type="text/css" href="img/slides.css">
+<!--    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      #slideshow .slide .content .cols.two .col { width: 48%; }
+    </style>
+-->
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introduction to GIS scripting
+
+INBO workshop, 9/11 May 2017
+
+Stijn Van Hoey
+
+https://github.com/stijnvanhoey/course_gis_scripting
+
+---
+class: center, middle
+
+# Setup working environment
+
+---
+
+# Setting up a working environment
+
+* Working on JupyterHub [1]:
+
+  * Log in at http://lifewatch.inbo.be/jupyterhub
+  * Start a Terminal: `New` (upper right) > `Terminal`
+
+* Working on your own laptop with Anaconda [2]
+
+---
+
+# Getting the course materials
+
+* With using git ([1] and recommended for [2])
+
+  First time (inside a terminal or cmd):
+
+  ```
+$ git clone https://github.com/stijnvanhoey/course_gis_scripting.git
+$ cd course_gis_scripting
+  ```
+
+  Updating (on second day):
+
+  ```
+  $ git pull
+  ```
+
+* Without git for [2]: download ZIP from https://github.com/stijnvanhoey/course_gis_scripting (green button "Clone or download")
+
+---
+
+# Create an environment with Anaconda (for [2] only)
+(*make sure you have a working internet connection*)
+
+Use our [environment.yml](https://github.com/stijnvanhoey/course_gis_scripting/blob/master/environment.yml) file inside the course folder to set up your Python working environment
+
+In a terminal or cmd, navigate to the `course_gis_scripting` folder and use the following command:
+
+```
+$ conda env create -f environment.yml
+```
+
+---
+
+# Create an environment with Anaconda (for [2])
+(*make sure you have a working internet connection*)
+
+When the environment is installed, activate the environment inside the terminal/cmd:
+
+* Windows-users
+```
+$ activate gispython
+```
+
+* Linux/Mac-users
+```
+$ source activate gispython
+```
+
+---
+
+# Starting a Jupyter Notebook (for [2])
+
+* In the terminal, navigate to the `course_gis_scripting` directory if not there already
+
+* Ensure that the correct environment is activated.
+
+* Start a jupyter notebook server with
+
+  ```
+$ jupyter notebook
+  ```
+
+  This will open a browser window automatically.
+
+---
+class: center, middle
+
+When you see something like this...
+
+
+![:scale 100%](./img/startup.png)
+
+...relax, you're ready to start!
+
+
+---
+class: center, middle
+
+![:scale 100%](https://i.ytimg.com/vi/PlaYMh-u-2w/maxresdefault.jpg)
+
+---
+class: center, middle
+
+# Introduction Python
+
+---
+class: center, middle
+
+# Why python?
+
+---
+class: center, middle
+
+# Python is...
+
+---
+
+## …OPEN SOURCE
+* No license costs!
+
+---
+
+## …WIDESPREAD
+* Large world-wide community ensures **fast development**
+* Used in **scientific** and non-scientific institutes <br> (Google, NASA, ESRI, VMM,...)
+* Python is a standard in **GIS** <br> (commercial and non-commercial tools)
+* **Multiplatform** (linux, windows,…)
+
+---
+
+## …READABLE
+
+.center[
+```
+It's easy to learn, easy to read and fast to develop
+```
+]
+<br><br><br>
+
+---
+
+## …REPRODUCIBLE
+
+.center[
+
+instead of
+```
+what did you/I clicked a few months ago?’-style WYSISYG
+```
+]
+
+---
+
+## …MULTI-FUNCTIONAL
+
+* Research and development: the python *scientific ecosystem*
+* Daily use: great as ductape/glue
+* **Automation** of time-consuming returning tasks
+
+---
+
+## ...SO WHAT? The Holy Grail ? No!
+* Commercial packages give specific support  and more direct help-functions (cfr. MATLAB, ArcGIS)
+* Commercial packages can be more client-friendly
+* For hard numercrunching stuff, NOT the fastest solution
+* Fortran, C++ etc are also ‘widespread’, so python is just a language amongst the others
+* Risk of getting lost in the forest/flood of ‘useful packages’
+
+---
+class: center, middle
+
+# Working with python
+
+---
+
+## Ipython console
+
+<br>
+.center[![:scale 75%](./img/ipython.png)]
+
+---
+
+## Interactive Development Environment (IDE)
+
+* [**Spyder**](https://pythonhosted.org/spyder/) is shipped with Anaconda. The familiar environment for Matlab/Rstudio-users...
+* [**PyCharm**](https://www.jetbrains.com/pycharm/): Popular for web-development and Django applications, powerful when doing 'real' development (packages, libraries, software)
+* [Eclipse + **pyDev plugin**](http://www.pydev.org/): If you like working in Eclipse, just add the python environment
+* ...
+
+---
+
+## Jupyter Notebook
+<small>(*previously called IPython notebook*)</small>
+
+**Jupyter notebook** provides an **interactive** scripting environment,<br> ideal for exploration, prototyping,...
+
+.center[![:scale 70%](./img/notebook.png)]
+
+--
+
+ ...the stuff we're dealing with in this course!
+
+
+---
+class: middle, center
+
+ask for help
+
+![:scale 60%](./img/postit.jpg)
+
+list you're never-to-forget commands
+
+---
+class: middle, center
+
+![:scale 100%](./img/issuetracker.png)
+
+Report bugs, typo's, suggestions... as issues ([New issue](https://github.com/stijnvanhoey/course_gis_scripting/issues/new))
+
+---
+
+# Overview of today (first day)
+
+Remainder of the morning:
+
+* Getting to know the Jupyter notebook
+* Introduction to Python
+* Introduction to scientific Python (numpy, pandas)
+
+Afternoon:
+
+* Introduction to GIS-ecosystem in Python
+* Geopandas/shapely
+* Pick your case:
+    - Case study: implementing NICHE
+    - Case study: mapping invasive species
+    - Case study: Sentinel2 data usage
+
+---
+class: center, middle
+
+# Python's scientific ecosystem
+
+
+#### ## Thanks to Jake VanderPlas for the figure
+
+
+---
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem1.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem2.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem3.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem4.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem5.svg)
+background-size: cover
+
+---
+
+# And many more tools
+
+**Performance**: Numba, Numexpr, Theano, Cython ...
+
+**Visualisation**: Bokeh, Seaborn, Altair, Plotly, Mayavi, HoloViews, ...
+
+**Data structures and (parallel/distributed) computation**: Xarray, Dask, Distributed, ...
+
+**Packaging and distribution**: pip/wheels, conda, Anaconda, Canopy, ...
+
+---
+class: center, middle
+
+# Python's scientific GIS ecosystem
+
+---
+class: center, middle
+
+###Reading advice
+
+[Good Enough Practices in Scientific Computing](https://arxiv.org/pdf/1609.00037v1.pdf)
+
+> "*However, while most scientists are careful to validate their laboratory and field equipment, most do not know how reliable their software is*"
+
+
+---
+class: center, middle
+
+## Good luck!
+
+![](http://www.backwaterreptiles.com/images/pythons/angolan-python-for-sale.jpg)
+
+
+    </textarea>
+<!--    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+</script>-->
+    <script src="img/remark.min.js" type="text/javascript">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+    <script>
+        remark.macros.scale = function (percentage) {
+          var url = this;
+          return '<img src="' + url + '" style="width: ' + percentage + '" />';
+      };
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
