@@ -25,6 +25,7 @@
 class: center, middle
 
 # Introduction to GIS scripting
+## Python introduction
 
 INBO workshop, 9/11 May 2017
 
@@ -131,73 +132,6 @@ class: center, middle
 
 ![:scale 100%](https://i.ytimg.com/vi/PlaYMh-u-2w/maxresdefault.jpg)
 
----
-class: center, middle
-
-# Introduction Python
-
----
-class: center, middle
-
-# Why python?
-
----
-class: center, middle
-
-# Python is...
-
----
-
-## …OPEN SOURCE
-* No license costs!
-
----
-
-## …WIDESPREAD
-* Large world-wide community ensures **fast development**
-* Used in **scientific** and non-scientific institutes <br> (Google, NASA, ESRI, VMM,...)
-* Python is a standard in **GIS** <br> (commercial and non-commercial tools)
-* **Multiplatform** (linux, windows,…)
-
----
-
-## …READABLE
-
-.center[
-```
-It's easy to learn, easy to read and fast to develop
-```
-]
-<br><br><br>
-
----
-
-## …REPRODUCIBLE
-
-.center[
-
-instead of
-```
-what did you/I clicked a few months ago?’-style WYSISYG
-```
-]
-
----
-
-## …MULTI-FUNCTIONAL
-
-* Research and development: the python *scientific ecosystem*
-* Daily use: great as ductape/glue
-* **Automation** of time-consuming returning tasks
-
----
-
-## ...SO WHAT? The Holy Grail ? No!
-* Commercial packages give specific support  and more direct help-functions (cfr. MATLAB, ArcGIS)
-* Commercial packages can be more client-friendly
-* For hard numercrunching stuff, NOT the fastest solution
-* Fortran, C++ etc are also ‘widespread’, so python is just a language amongst the others
-* Risk of getting lost in the forest/flood of ‘useful packages’
 
 ---
 class: center, middle
@@ -205,34 +139,62 @@ class: center, middle
 # Working with python
 
 ---
+class: left, middle
 
-## Ipython console
+## It is just plain text... 
+
+--
+
+## ...until you run it!
+
+---
+
+## (I)python console
+
+**Interactive mode**: It functions like an *advanced calculator*, <br>executing one command at a time:
 
 <br>
 .center[![:scale 75%](./img/ipython.png)]
 
 ---
 
+## Python scripts
+
+**Scripting mode**: Executing a series of commands saved in text file, with a `.py` extension after the name of your file. 
+
+.center[![:scale 75%](./img/script.png)]
+
+---
+
 ## Interactive Development Environment (IDE)
 
-* [**Spyder**](https://pythonhosted.org/spyder/) is shipped with Anaconda. The familiar environment for Matlab/Rstudio-users...
-* [**PyCharm**](https://www.jetbrains.com/pycharm/): Popular for web-development and Django applications, powerful when doing 'real' development (packages, libraries, software)
-* [Eclipse + **pyDev plugin**](http://www.pydev.org/): If you like working in Eclipse, just add the python environment
-* ...
+Provides an environment to combine **Interactive mode** and <br> **Scripting mode**
+
+.center[![:scale 55%](./img/spyder.png)]
+
+--
+<div class="alert alert-info">
+<a href="https://pythonhosted.org/spyder/">Spyder</a> is the familiar environment for Matlab/Rstudio-users.
+</div>
 
 ---
 
 ## Jupyter Notebook
-<small>(*previously called IPython notebook*)</small>
 
-**Jupyter notebook** provides an **interactive** scripting environment,<br> ideal for exploration, prototyping,...
+**Jupyter notebook** provides an **interactive** scripting environment,<br> ideal for exploration, prototyping, tutorials,...<br>
 
 .center[![:scale 70%](./img/notebook.png)]
 
 --
+<br>
+<div class="alert alert-warning">
+Comparable to Rmarkdown
+</div>
 
- ...the stuff we're dealing with in this course!
+---
+class: middle, center 
 
+## Intermezzo!
 
 ---
 class: middle, center
@@ -241,33 +203,41 @@ ask for help
 
 ![:scale 60%](./img/postit.jpg)
 
-list you're never-to-forget commands
+list your never-to-forget commands
 
 ---
 class: middle, center
 
 ![:scale 100%](./img/issuetracker.png)
 
-Report bugs, typo's, suggestions... as issues ([New issue](https://github.com/stijnvanhoey/course_gis_scripting/issues/new))
+
+<div class="alert alert-danger">
+Report bugs, typo's, suggestions... as issues: <a href="https://github.com/stijnvanhoey/course_gis_scripting/issues/new">New issue</a>
+</div>
+
 
 ---
 
-# Overview of today (first day)
+# Overview morning session
 
-Remainder of the morning:
+<br><br><br>
+1. Getting to know the Jupyter notebook
+1. Introduction to Python
+1. Introduction to scientific Python: Numpy, Pandas
 
-* Getting to know the Jupyter notebook
-* Introduction to Python
-* Introduction to scientific Python (numpy, pandas)
+---
+class: center, middle
 
-Afternoon:
+# Jupyter notebook
 
-* Introduction to GIS-ecosystem in Python
-* Geopandas/shapely
-* Pick your case:
-    - Case study: implementing NICHE
-    - Case study: mapping invasive species
-    - Case study: Sentinel2 data usage
+`00-jupyter_introduction.ipynb`
+
+---
+class: center, middle
+
+# Python: the essentials
+
+`01-python-introduction.ipynb`
 
 ---
 class: center, middle
@@ -319,10 +289,89 @@ background-size: cover
 
 **Packaging and distribution**: pip/wheels, conda, Anaconda, Canopy, ...
 
+--
+
+<br>
+<div class="alert alert-info">
+    <b>REMEMBER</b>:<br><br>
+
+Feel free to ask me advice/support on the use of new packages!
+
+</div>
+
+
 ---
 class: center, middle
 
-# Python's scientific GIS ecosystem
+# Scientific Python: 
+# the essentials
+
+`02-scientific-python-introduction.ipynb`
+
+
+---
+class: center, middle
+
+# Why Python?
+
+---
+class: center, middle
+
+# Python is...
+
+---
+
+## …OPEN SOURCE
+* No license costs!
+
+---
+
+## …WIDESPREAD
+* Large world-wide community ensures **fast development**
+* Used in **scientific** and non-scientific institutes <br> (Google, NASA, ESRI, VMM,...)
+* Python is a standard in **GIS** <br> (commercial and non-commercial tools)
+* **Multiplatform** (linux, windows,…)
+
+---
+
+## …READABLE
+
+.center[
+```
+It's easy to learn, easy to read and fast to develop
+```
+]
+<br><br><br>
+
+---
+
+## …REPRODUCIBLE
+
+.center[
+
+instead of
+```
+what did you/I clicked a few months ago?’-style WYSISYG
+```
+]
+
+---
+
+## …MULTI-FUNCTIONAL
+
+* Research and development: the python *scientific ecosystem*
+* Daily use: great as ductape/glue
+* **Automation** of returning tasks
+
+---
+
+## …SO WHAT? The Holy Grail ? No!
+* Commercial packages give specific support  and more direct help-functions (cfr. MATLAB, ArcGIS)
+* Commercial packages can be more client-friendly
+* For hard numercrunching stuff, NOT the fastest solution
+* Fortran, C++ etc are also ‘widespread’, so python is just a language amongst the others
+* Risk of getting lost in the forest/flood of ‘useful packages’
+
 
 ---
 class: center, middle
@@ -357,5 +406,11 @@ class: center, middle
       };
       var slideshow = remark.create();
     </script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </body>
 </html>
