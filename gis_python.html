@@ -38,11 +38,8 @@ https://github.com/stijnvanhoey/course_gis_scripting
 # Afternoon session: TODO
 
 * Introduction to GIS-ecosystem in Python
-* Geopandas/shapely
-* Pick your case:
-    - Case study: implementing NICHE
-    - Case study: mapping invasive species
-    - Case study: Sentinel2 data usage
+* ...
+* 
 
 ---
 
@@ -55,7 +52,7 @@ It is all about **methods/functions** that act on **objects** which have certain
 
 --- 
 
-The story of a list -> array -> labellde arrays (DataFrames) -> ADD GEOMETRY INFORMATION =>HOORAY we have vectors...
+The story of a list -> array -> labellde arrays (DataFrames) -> ADD GEOMETRY INFORMATION => HOORAY we have vectors...
 
 ---
 
@@ -63,6 +60,12 @@ Hence -> import arcpy => easy/direct access to geodatabases,... from ESRI (these
 
 (focus op standalone en niet op programmeren binnen ArcGIS: ja, je kan modelbuilder exporteren en je kan binnen ArcGis programmeren, maar dat is niet mijn focus)
 
+--- 
+
+subprocess CALL != python library (!)
+
+
+DO not mix gdal and rasterio in a single script!!
 ---
 class: center, middle
 
@@ -72,32 +75,91 @@ class: center, middle
 
 
 ---
+
+GDAL -> command line... pfff
+ => use it inside QGis  (https://docs.qgis.org/2.2/en/docs/user_manual/plugins/plugins_gdaltools.html) => Use QGIS the first time to set it up!
+ => create your own scripts -> example
+ 
+---
+
+foundations: gdal, https://trac.osgeo.org/gdal/wiki/SoftwareUsingGdal
+geos -> shapely
+
+---
 class: center, middle, bgheader
-background-image: url(img/JakeVdP-ecosystem1.svg)
+background-image: url(img/StijnVH-ecosystem-gis-1.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/JakeVdP-ecosystem2.svg)
+background-image: url(img/StijnVH-ecosystem-gis-2.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/JakeVdP-ecosystem3.svg)
+background-image: url(img/StijnVH-ecosystem-gis-3.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/JakeVdP-ecosystem4.svg)
+background-image: url(img/StijnVH-ecosystem-gis-4.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/JakeVdP-ecosystem5.svg)
+background-image: url(img/StijnVH-ecosystem-gis-5.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-6.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-7.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-8.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-9.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-10.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-11.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-12.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-13.png)
 background-size: cover
 
 ---
@@ -144,6 +206,12 @@ class: center, middle
 # Python's scientific GIS ecosystem
 
 
+---
+class: center, middle
+
+# QGis scripts in Python
+
+Example with the split vector layer by attribute...
 
 
 
