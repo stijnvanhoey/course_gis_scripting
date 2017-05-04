@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to GIS scripting</title>
+    <meta charset="utf-8">
+      <link rel="stylesheet" type="text/css" href="img/slides.css">
+<!--    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      #slideshow .slide .content .cols.two .col { width: 48%; }
+    </style>
+-->
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introduction to GIS scripting
+## Python for GIS
+
+INBO workshop, 9/11 May 2017
+
+Stijn Van Hoey
+
+https://github.com/stijnvanhoey/course_gis_scripting
+
+---
+
+# Afternoon session: TODO
+
+* Introduction to GIS-ecosystem in Python
+* Geopandas/shapely
+* Pick your case:
+    - Case study: implementing NICHE
+    - Case study: mapping invasive species
+    - Case study: Sentinel2 data usage
+
+---
+
+* Packages, packages, packages... some good, some really bad!
+
+---
+
+It is all about **methods/functions** that act on **objects** which have certain **characteristics**
+
+
+--- 
+
+The story of a list -> array -> labellde arrays (DataFrames) -> ADD GEOMETRY INFORMATION =>HOORAY we have vectors...
+
+---
+
+Hence -> import arcpy => easy/direct access to geodatabases,... from ESRI (these objects know eachother)
+
+(focus op standalone en niet op programmeren binnen ArcGIS: ja, je kan modelbuilder exporteren en je kan binnen ArcGis programmeren, maar dat is niet mijn focus)
+
+---
+class: center, middle
+
+# Python's GIS ecosystem
+
+#### ## With a subjective flavour/selection from myself
+
+
+---
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem1.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem2.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem3.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem4.svg)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/JakeVdP-ecosystem5.svg)
+background-size: cover
+
+---
+
+# And many more packages
+
+**Performance**: Numba, Numexpr, Theano, Cython ...
+
+**Visualisation**: Bokeh, Seaborn, Altair, Plotly, Mayavi, HoloViews, ...
+
+**Data structures and (parallel/distributed) computation**: Xarray, Dask, Distributed, ...
+
+**Packaging and distribution**: pip/wheels, conda, Anaconda, Canopy, ...
+
+---
+class: center, middle
+
+# Vectors: the essentials
+
+`....ipynb`
+
+---
+class: center, middle
+
+# Rasters: the essentials
+
+`01-python-introduction.ipynb`
+
+---
+class: center, middle
+
+# Scientific Python: the essentials
+
+`02-scientific-python-introduction.ipynb`
+
+
+---
+
+# TODO TODO TODO
+
+---
+class: center, middle
+
+# Python's scientific GIS ecosystem
+
+
+
+
+
+---
+class: center, middle
+
+## Good luck!
+
+![](http://www.backwaterreptiles.com/images/pythons/angolan-python-for-sale.jpg)
+
+
+    </textarea>
+<!--    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+</script>-->
+    <script src="img/remark.min.js" type="text/javascript">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+    <script>
+        remark.macros.scale = function (percentage) {
+          var url = this;
+          return '<img src="' + url + '" style="width: ' + percentage + '" />';
+      };
+      var slideshow = remark.create();
+    </script>
+    </script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
+  </body>
+</html>
