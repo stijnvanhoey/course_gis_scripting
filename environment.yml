@@ -5,8 +5,11 @@ channels: !!python/tuple
 - !!python/unicode
   'defaults'
 dependencies:
+- conda-forge::affine=2.0.0.post1=py35_0
 - conda-forge::blas=1.1=openblas
 - conda-forge::bleach=1.5.0=py35_0
+- conda-forge::boto3=1.4.4=py35_0
+- conda-forge::botocore=1.5.39=py35_0
 - conda-forge::ca-certificates=2017.1.23=1
 - conda-forge::certifi=2017.4.17=py35_0
 - conda-forge::click=6.7=py35_0
@@ -17,6 +20,7 @@ dependencies:
 - conda-forge::dbus=1.10.10=3
 - conda-forge::decorator=4.0.11=py35_0
 - conda-forge::descartes=1.1.0=py35_0
+- conda-forge::docutils=0.13.1=py35_0
 - conda-forge::entrypoints=0.2.2=py35_1
 - conda-forge::expat=2.1.0=2
 - conda-forge::fiona=1.7.6=np112py35_0
@@ -42,6 +46,7 @@ dependencies:
 - conda-forge::ipywidgets=6.0.0=py35_0
 - conda-forge::jedi=0.10.0=py35_0
 - conda-forge::jinja2=2.9.5=py35_0
+- conda-forge::jmespath=0.9.2=py35_0
 - conda-forge::jpeg=9b=0
 - conda-forge::json-c=0.12=0
 - conda-forge::jsonschema=2.5.1=py35_0
@@ -66,12 +71,14 @@ dependencies:
 - conda-forge::markupsafe=0.23=py35_1
 - conda-forge::matplotlib=2.0.1=np112py35_0
 - conda-forge::mistune=0.7.4=py35_0
+- conda-forge::mplleaflet=0.0.5=py35_1
 - conda-forge::munch=2.1.1=py35_0
 - conda-forge::nbconvert=5.1.1=py35_1
 - conda-forge::nbformat=4.3.0=py35_0
 - conda-forge::ncurses=5.9=10
 - conda-forge::notebook=5.0.0=py35_0
 - conda-forge::numpy=1.12.1=py35_blas_openblas_200
+- conda-forge::olefile=0.44=py35_0
 - conda-forge::openblas=0.2.19=2
 - conda-forge::openjpeg=2.1.2=2
 - conda-forge::openssl=1.0.2k=0
@@ -81,6 +88,7 @@ dependencies:
 - conda-forge::pcre=8.39=0
 - conda-forge::pexpect=4.2.1=py35_0
 - conda-forge::pickleshare=0.7.3=py35_0
+- conda-forge::pillow=4.1.0=py35_0
 - conda-forge::pip=9.0.1=py35_0
 - conda-forge::proj4=4.9.3=3
 - conda-forge::prompt_toolkit=1.0.14=py35_0
@@ -97,14 +105,17 @@ dependencies:
 - conda-forge::pyzmq=16.0.2=py35_1
 - conda-forge::qt=5.6.2=2
 - conda-forge::qtconsole=4.3.0=py35_0
+- conda-forge::rasterio=1.0a8=np112py35_0
 - conda-forge::readline=6.2=0
 - conda-forge::rtree=0.8.3=py35_0
+- conda-forge::s3transfer=0.1.10=py35_1
 - conda-forge::scipy=0.19.0=np112py35_blas_openblas_200
 - conda-forge::setuptools=33.1.1=py35_0
 - conda-forge::shapely=1.5.17=np112py35_2
 - conda-forge::simplegeneric=0.8.1=py35_0
 - conda-forge::sip=4.18=py35_1
 - conda-forge::six=1.10.0=py35_1
+- conda-forge::snuggs=1.4.1=py35_0
 - conda-forge::sqlalchemy=1.1.5=py35_0
 - conda-forge::sqlite=3.13.0=1
 - conda-forge::terminado=0.6=py35_0
@@ -117,6 +128,7 @@ dependencies:
 - conda-forge::wheel=0.29.0=py35_0
 - conda-forge::widgetsnbextension=2.0.0=py35_0
 - conda-forge::xerces-c=3.1.4=3
+- conda-forge::xlrd=1.0.0=py35_1
 - conda-forge::xorg-libxau=1.0.8=3
 - conda-forge::xorg-libxdmcp=1.1.2=3
 - conda-forge::xz=5.2.2=0
@@ -126,8 +138,6 @@ dependencies:
 - util-linux=2.21=0
 - pip:
   - awscli==1.11.75
-  - botocore==1.5.38
-  - docutils==0.13.1
   - ipython-genutils==0.2.0
   - jupyter-client==5.0.1
   - jupyter-console==5.1.0

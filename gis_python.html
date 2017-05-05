@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to GIS scripting</title>
+    <meta charset="utf-8">
+      <link rel="stylesheet" type="text/css" href="img/slides.css">
+<!--    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      #slideshow .slide .content .cols.two .col { width: 48%; }
+    </style>
+-->
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introduction to GIS scripting
+## Python for GIS
+
+INBO workshop, 9/11 May 2017
+
+Stijn Van Hoey
+
+https://github.com/stijnvanhoey/course_gis_scripting
+
+---
+class: center, middle
+
+
+# Recap
+
+---
+class: left, middle
+
+* `Packages` provide new objects and methods
+
+```python
+import datetime
+import numpy as np
+import pandas as pd
+```
+
+--
+
+* `methods/functions` act on `objects` to do something -> `()`
+
+```python
+np.sum(my_array)
+my_df.transpose()
+```
+
+--
+
+* These objects have `characteristics/attributes`
+
+```python
+my_array.size
+my_df.columns
+```
+
+--
+
+* Some of these objects can be `sliced` -> `[]`
+
+```python
+my_array[1:10:2]
+my_df["column_name"]
+```
+
+---
+
+# Afternoon session
+
+* An introduction example
+* The GIS-ecosystem in Python
+* Vectors: the essentials
+* Raster suggestions
+* Desktop GIS interaction
+
+---
+class: center, middle
+
+# Introduction showcase
+
+`03-geopandas-appetizer.ipynb`
+
+---
+class: center, middle
+
+# Python's GIS ecosystem
+
+#### ## With a subjective flavour/selection
+ 
+---
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-1.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-2.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-3.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-4.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-5.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-14.png)
+background-size: cover
+
+---
+class: center, middle
+
+![:scale 10%](./img/gdal_logo.png)
+
+[GDAL (Geospatial Data Abstraction Library)](http://www.gdal.org/) is the<br>
+open source Swiss Army knife<br> for raster and vector geospatial data formats.
+
+--
+
+<br><br><br><br>
+<small>Traditionally `GDAL` used to design the raster part of the library, and `OGR` the vector part for Simple Features. Starting with GDAL 2.0, both sides have been more integrated.<small>
+
+---
+
+GDAL's python bindings expose most of the functionality of GDAL.
+
+```python
+from osgeo import gdal
+from osgeo import ogr
+```
+
+--
+
+### But...
+
+
+--
+
+GDAL python bindings are not very "pythonic"
+
+```python
+geo = gdal.Open(raster_file)
+drv = geo.GetDriver()
+print(drv.GetMetadataItem('DMD_LONGNAME'))
+```
+
+--
+
+.center[
+![:scale 80%](./img/monty_python.jpg)
+]
+
+---
+class: left, middle
+
+### More pythonic libraries for reading GIS data
+
+* OGR (vector) -> Fiona
+* GDAL (raster) -> Rasterio
+
+---
+
+## Fiona
+
+Fiona is a Python package for reading (and writing) `vector data`.<br>
+
+Fiona provides `Python objects` (e.g. a dictionary for each record) to geospatial data in various formats.
+
+```python
+> with fiona.open('../data/deelbekkens/Deelbekken.shp') as deelbekkens:
+     feature = next(iter(deelbekkens)) # Just one checking the first
+     print("Bekken: ", feature['properties']['BEKNAAM'])
+     print("Vectortype: ", feature['geometry']['type'])
+Bekken:  Boven-Scheldebekken
+Vectortype:  Polygon
+```
+
+---
+
+## Shapely
+
+Shapely is a Python library for geometric operations (**GEOS** library).
+
+Shapely can perform:
+
+* geometry validation
+* geometry creation (e.g. collections)
+* **geometry operations**
+
+--
+
+`difference`, `intersection`, `union`,...
+.center[
+![:scale 80%](./img/shapely_intersection.png)
+]
+
+
+---
+class: middle
+
+**Compare geometries**
+
+* `object.almost_equals(other[, decimal=6])`
+* `object.contains(other)`
+* `object.crosses(other)`
+* `object.disjoint(other)`
+* `object.equals(other)`
+* `object.intersects(other)`
+* `object.touches(other)`
+* `object.within(other)`
+
+---
+
+
+## pyproj
+### handling Spatial Reference Systems (SRS)
+
+Examples:
+* `EPSG:4326` -> latitude, longitude in WGS-84 coordinate system
+* `EPSG:31370` -> Belge 1972 / Belgian Lambert 72
+
+A number of formats exist to represent the SRS: 
+* WKT
+* PROJ.4
+* EPSG:xxxx
+
+---
+class: center, middle
+
+# Vectors: the essentials
+
+`04-gis-python-vectors.ipynb`
+
+
+---
+class: center, middle
+
+## The curious case of GDAL
+
+---
+
+## GDAL functions: CMD
+
+Available on the command line... with [documentation](http://gdal.org/1.11/gdalwarp.html)...<br>
+
+.center[
+![:scale 70%](./img/ogr2ogr_cmd.png)
+]
+<br><br>
+
+This [online cheat-sheet](https://github.com/dwtkns/gdal-cheat-sheet) is a great resource!
+
+---
+
+## GDAL functions: QGIS
+
+* Add [gdaltools plugin](https://docs.qgis.org/2.2/en/docs/user_manual/plugins/plugins_gdaltools.html) to QGis
+.center[
+![:scale 70%](./img/gdaltools.png)
+]
+
+---
+
+## GDAL functions: QGIS
+
+* Build the command using the interface and copy paste your command for later usage...
+
+.center[
+![:scale 70%](./img/gdaltools_cmd.png)
+]
+
+---
+
+## GDAL functions: Python
+
+* Import the GDAL library and use it within a script
+
+```python
+from osgeo import gdal
+
+#...
+```
+
+--
+
+* Write a Python function to call a specific GDAL command
+
+```python
+# No 'from osgeo import gdal' (!)
+subprocess.call(['gdalwarp', inraster, outraster, '-cutline', inshape, 
+                     '-crop_to_cutline', '-overwrite'])
+```
+
+---
+class: center, middle
+
+# call GDAL
+
+`05-the-power-of-gdal.ipynb`
+
+---
+## Rasterio
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<small>(*All credits to [Kelsey Jordahl](https://github.com/kjordahl/SciPy-Tutorial-2015) for the example*)</small>
+
+---
+
+### Rasterio python API
+
+```python
+with rasterio.open('manhattan.tif') as f:
+    img = f.read(1)
+imshow(img, cmap='gray')
+```
+
+.center[
+![:scale 80%](./img/manhattan_band_1.png)
+]
+
+---
+
+### Rasterize vector features
+
+Using GeoPandas to generate a vector mask and applying it to a raster image with rasterio ([example](https://github.com/kjordahl/SciPy-Tutorial-2015/blob/master/examples/rasterio_mask.py)).
+
+.center[
+![:scale 100%](./img/rasterize_mask.png)
+]
+
+---
+
+### Rasterize vector features
+
+Using GeoPandas to generate a vector mask and applying it to a raster image with rasterio ([example](https://github.com/kjordahl/SciPy-Tutorial-2015/blob/master/examples/rasterio_mask.py)).
+
+```python
+from rasterio.features import rasterize
+mask = rasterize([poly], transform=src.transform, out_shape=src.shape)
+```
+
+.center[
+![:scale 75%](./img/mask.png)
+]
+
+---
+class: center, middle
+
+# Raster data in Python
+
+(*only for illustration purposes*)
+
+`06-gis-python-rasters.ipynb`
+
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-6.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-7.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-8.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-9.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-10.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-11.png)
+background-size: cover
+
+---
+
+# ArcPy
+
+```python
+import arcpy
+```
+
+The `ArcPy` Package provides a [set of `objects` and `functions`](http://desktop.arcgis.com/en/arcmap/latest/analyze/arcpy-functions/alphabetical-list-of-arcpy-functions.htm)
+
+--
+<br>
+For example, the interaction with Numpy:
+
+```python
+arcpy.env.workspace = os.getcwd() + "\\demo.gdb" # connect to gdb
+
+arr = arcpy.da.TableToNumPyArray("canton", "pop_2008")
+print("Sum : {:,}".format(arr['pop_2008'].sum()))
+```
+
+--
+<br>
+
+<div class="alert alert-info">
+Hence, the same as we've been doing the whole day... (except of the licen$e)
+</div>
+
+--
+
+You can also [export](http://desktop.arcgis.com/en/arcmap/10.3/analyze/modelbuilder/exporting-a-model-to-a-python-script.htm) a model builder setup<br> as a Python script and start working on it...
+
+---
+class: center, middle
+
+# QGis scripts in Python
+
+`Demo`
+
+Check the information [here](https://docs.qgis.org/2.8/en/docs/user_manual/processing/scripts.html) and [here](http://docs.qgis.org/2.0/en/docs/user_manual/processing/console.html) to write your own QGIS scripts.
+
+---
+class: center, middle
+
+## Good luck!
+
+![](http://www.backwaterreptiles.com/images/pythons/angolan-python-for-sale.jpg)
+
+
+    </textarea>
+<!--    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+</script>-->
+    <script src="img/remark.min.js" type="text/javascript">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+    <script>
+        remark.macros.scale = function (percentage) {
+          var url = this;
+          return '<img src="' + url + '" style="width: ' + percentage + '" />';
+      };
+      var slideshow = remark.create();
+    </script>
+    </script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
+  </body>
+</html>
