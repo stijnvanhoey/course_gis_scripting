@@ -89,3 +89,4 @@ ENV/
 .ropeproject
 
 scratch/
+.Rproj.user
