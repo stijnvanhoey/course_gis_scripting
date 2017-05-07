@@ -3,10 +3,310 @@ title: "GIS R vectors"
 output: html_notebook
 ---
 
+# Setup
 
+Make sure your have `rgdal`, `rgeos`, `raster` and `sp` installed:
+    
+```{r}
+library('rgdal')
+library('sp')
+library('raster')
+library('rgeos')
+library('dplyr')
+```
+
+# Spatial data objects: `sp`
+
+Package `sp` is the central package supporting spatial data analysis in R. `sp` defines a set of classes to represent spatial data. A class defines a particular data type. The `data.frame` is an example of a class. Any particular data.frame you create is an **object** (instantiation) of that class.
+
+In fact, the `sp` package does not provide many functions to modify or analyse spatial data; but the classes it defines are used in >100 other R packages that provide specific functionalities. The classes `sp` defines are mostly starting with `Spatial*`. For vector data, the basic types are the `SpatialPoints`, `SpatialLines`, and `SpatialPolygons`. These classes only represent **geometries** (i.e. the spatial information). To link the saptial information to a data-table, classes are available with these names plus `DataFrame`, for example, `SpatialPolygonsDataFrame` and `SpatialPointsDataFrame`.
+
+## Geometries
+
+Consider the following vectors with coordinate information:
+```{r}
+longitude <- c(4.4543, 5.02789, 4.94202, 4.49238, 4.49054, 4.54044, 5.95192, 
+               4.49496, 4.4958, 5.68327, 4.49054, 4.49054, 4.4958, 4.48938)
+latitude <- c(51.33847, 51.24824, 51.24325, 51.26218, 51.25701, 51.27518, 
+              51.30803, 51.25803, 51.26106, 51.04185, 51.25701, 51.25701, 
+              51.26106, 51.25955)
+lonlat <- cbind(longitude, latitude)
+```
+
+Besides the numbers itself, the variable `lonlat` is not aware of any spatial context (it is just a `matrix` object). 
+
+```{r}
+pts <- SpatialPoints(lonlat)
+class(pts)
+```
+
+We converted the vector to an object of `SpatialPoints`, which contains, beside the matrix data, additional information:
+
+```{r}
+showDefault(pts)
+```
+
+So we see that the object has the coordinates we supplied, but also a `bbox`. This is a ‘bounding box’, or the ‘spatial extent’ that was computed from the coordinates. There is also a `proj4string`. This stores the coordinate reference system (CRS). We did not provide the crs so it is unknown (NA). That is not good, so let’s recreate the object, and now provide a crs. We'll come back to the projection definition later:
+
+```{r}
+crs_wgs84 <- CRS("+init=epsg:4326")
+pts <- SpatialPoints(lonlat, proj4string = crs_wgs84)
+showDefault(pts)
+```
+
+Hence, the projection information is provided and our geometry is aware of the spatial context. **Remark**: Assigning a CRS is like labeling something. You need to provide the label that corresponds to the item. Not to what you would like it to be. The latter requires a transformation.
+
+The definition of the geometry as an object of the `SpatialPoints` class, provides a number of spatial functionalities that are not directly available to *default* matrices. As said in the introduction, the `sp` class mainly focuses on the classes (objects) and not on the functionalities. However, an essential functionality provided by `sp` itself (apart from `over` and `aggregate`), is the **transformation of the coordinate reference system (CRS)**:
+
+```{r}
+crs_lambert <- CRS("+init=epsg:31370") 
+pts_lambert <- spTransform(pts, crs_lambert)
+showDefault(pts_lambert)
+```
+
+Other (geometric) operations are provided by (a huge amount of) additional R Packages. The `rgeos` package is such an example:
+
+```{r}
+library(rgeos)
+```
+
+As an example: adding a buffer to our `SpatialPoints` object:
+```{r}
+pts_lambert_buffer <- gBuffer(pts_lambert, byid = TRUE, width = 2000) # gbuffer from the rgeos package
+```
+
+Hence, the result is again a `Spatial*` object, i.e. a `SpatialPolygons` object. A plot of the `pts_lambert` and the `pts_lambert_buffered` together looks as follows:
+
+```{r}
+plot(pts_lambert_buffer, border = 'blue', 
+     col = 'yellow', lwd = 3, axes = TRUE)
+plot(pts_lambert, add = TRUE, col = 'red', las = 1)
+```
+
+For quick data exploration of such a small data set, an interactive visualisation provides better insight. The [leaflet](https://rstudio.github.io/leaflet/) package is well-documented and easy to use, certainly when the `dplyr` piping is familiar to use:
+
+```{r}
+leaflet() %>%  
+    addTiles() %>%  # provide a default openstreetmap background layer to the image
+    addCircles(data = pts)  %>% # Add the points to the map
+    addPolygons(data = spTransform(pts_lambert_buffer, wgs_84)) # Add the buffer polygons to the map
+```
+
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+Check the [documentation of the leaflet Package](https://rstudio.github.io/leaflet/) and adapt the following items to the leaflet map:<br>
+(1) The coordinates should be replaced by an icon marker instead of just a circle<br>
+(2) The buffers should not be filled and have a red color.
+</div>
+
+## Spatial***DataFrame
+
+The geometry classes provided by `sp` contain the spatial information, but do not add data to these points (or lines/polygons). The data attribute table is typically provided as a `data.frame`. For this reason, `sp` also provides classes that link the geometries with DatFrames: `SpatialPointsDataFrame`, `SpatialLinesDataFrame` and `SpatialPolygonsDataFrame`. 
+
+Let's assume that for each of the coorindates defined above, we also have information about an `identifier` and a `scientificName`:
+
+```{r}
+identifiers <- c('INBO:NBN:BFN00179000029DL', 'INBO:NBN:BFN001790000A584', 
+                 'INBO:NBN:BFN001790000AACI', 'INBO:NBN:BFN0017900009DOC', 
+                 'INBO:NBN:BFN001790000A4J0', 'INBO:NBN:BFN0017900009DO8', 
+                 'INBO:NBN:BFN001790000AACF', 'INBO:NBN:BFN001790000A4JO', 
+                 'INBO:NBN:BFN001790000A4K8', 'INBO:NBN:BFN001790000A51G', 
+                 'INBO:NBN:BFN001790000A4J3', 'INBO:NBN:BFN001790000A4J5', 
+                 'INBO:NBN:BFN001790000A4K6', 'INBO:NBN:BFN001790000A4L5')
+scientific_names <- c('Lagarosiphon major', 'Lagarosiphon major', 
+                      'Muntiacus reevesii', 'Muntiacus reevesii', 
+                      'Muntiacus reevesii', 'Muntiacus reevesii', 
+                      'Muntiacus reevesii', 'Muntiacus reevesii', 
+                      'Muntiacus reevesii', 'Muntiacus reevesii', 
+                      'Muntiacus reevesii', 'Muntiacus reevesii', 
+                      'Muntiacus reevesii', 'Muntiacus reevesii')
+recorded <- as.data.frame(cbind(identifiers, scientific_names))
+head(recorded)
+```
+
+Hence, the `SpatialPointsDataFrame` combines the spatial information (`pts_lambert`) with the recorded data (`recorded`):
+
+```{r}
+pts_recorded <- SpatialPointsDataFrame(pts_lambert, data = recorded)
+pts_recorded
+```
+
+For the moment, the take home message is that `Spatial***DataFrame` bring together the attribute data (`data.frame`), the coordinates (`geometry`) and the coordinate reference system (`crs`). 
+
+## Projection
+
+In the previous section, we already used the `CRS` class definition to specify the coordinate reference system. As many other systems, R uses the [PROJ.4](http://proj4.org/) notation to define the CRS. The number of parameters depends on the projection. However, the easiest way is (mostly) using the [`EPSG` code](http://spatialreference.org/), for example:
+
+```{r, eval=FALSE, include=FALSE}
+CRS("+init=epsg:4326")
+CRS("+init=epsg:31370")
+```
+
+But other options are available as well:
+
+```{r}
+CRS("+proj=utm +zone=32")
+```
+
+In general, the definition of the CRS (input argument) should ba a string setup up by one or more `+<arg>=<value>` combinations, each of them separated by a blank value: `+<arg1>=<value1> +<arg2>=<value2>`. The CRS-creation returns an object (with a variable name you can assign):
+```{r}
+wgs_84 <- CRS("+init=epsg:4326")
+wgs_lambert <- CRS("+init=epsg:31370")
+wgs_84
+wgs_lambert
+```
+
+which can be used in other functions/methods or used to **support the transformation of the coordinate reference system** of *spatial aware objects*. Hence, transformation won't work on a default vector or matrix object:
+
+```{r}
+spTransform(c(98710.32800000161, 162573.7030000016), wgs_84)
+```
+
+But after transformation of the single coordinate to a `SpatialPoints` object, the `spTransform` function can be used:
+```{r}
+single_coordinate <- SpatialPoints(matrix(c(98710.32800000161, 
+                                            162573.7030000016), 
+                                          ncol = 2), 
+                                   proj4string = wgs_lambert)
+                                  
+spTransform(single_coordinate, wgs_84)
+```
+
+The application is similar to other spatial objects, such as a `SpatialPointsDataFrame`:
+
+```{r}
+pts_recorded_wgs84 <- spTransform(pts_recorded, wgs_84)
+pts_recorded_wgs84
+```
+
+<div class="alert alert-success">
+<b>EXERCISE</b>
+
+As your regularly encounter point coordinates that need conversion to another projection system, you decide to make a functions for future use:<br>
+
+For any `data.frame`(!) with coordinate information in a known coordinate reference system, update the columns with the x/y information to another coordinate system. The fuction returns the updated `data.frame`.
+
+The function will probably look more or less like this:<br><br>
+
+    reproject_points <- function(df, col_long, col_lat,
+                                 project_input, project_output){
+        # ...
+        
+        return(df)
+</div>
+
+**Remark:** This function is part of an [`inbo-rutil` script,  ](https://github.com/inbo/inbo-rutils/blob/master/gis/guess_projection.R) to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coodinate reference systems.
+
+# Reading data: `rgdal`
+
+Mostly, the starting point of a data analysis involving spatial data is a data set in any kind of GIS format. The functionality to read **vector** data is provide by the `readOGR` function or the `rgdal` package:
+
+```{r}
+deelbekkens <- readOGR("../../data/deelbekkens/Deelbekken.shp")
+```
+
+```{r}
+deelbekkens
+```
+
+```{r}
+plot(deelbekkens)
+```
+
+Besides shapefiles, other vector data formats can be read as well. Certainly `geojson` is a increasingly used fata fromat for feature (vector) data sets:
+
+```{r}
+eu_10grid <- readOGR("../../data/EUgrid10.geojson")
+```
+```{r}
+eu_10grid
+```
+
+Actually, the set of data formats you can interact with, *does not depend on R*, but is dependent on your GDAL installation. To check if the installation supports a specific **vector** data format, you can get an overview of them by the `ogrDrivers()` command:
+
+```{r}
+head(ogrDrivers()) # Just the first 6 records are shown here
+```
+
+For data sets with multiple layers, the reading of a specific Layer is supported as well. For example, when the driver to read ESRI FileGeoDatabases is present, following commands will be useful as well:
+
+```{r, eval=FALSE, include=FALSE}
+# information about the data (without actually reading the data itself)
+ogrInfo(dsn = "name_filegeodatabase.gdb") 
+# enlist the names of the layers in the dataset
+ogrListLayers(dsn = "name_filegeodatabase.gdb")
+# Reading a specific layer
+readOGR(dsn = "name_filegeodatabase.gdb", layer = "layer_of_interest"
+```
+
+# Vector data manipulation
+
+## DataFrame alike manipulation
+
+Vector data represented as `Spatial***DataFrame` can be subselected as a DataFrame. For example, selecting only the `deelbekkens` that are in the `Netebekken` (boolean indexing):
+
+```{r}
+nete <- deelbekkens[deelbekkens$BEKNAAM == "Netebekken", ]
+plot(nete)
+```
+
+The result of the selection is again a `SpatialPolygonsDataFrame`. When only interested in the data itself, the selection of the attribute data alone can be done by converting the data to a dataframe. 
+
+```{r}
+head(as.data.frame(nete))
+```
+
+Hence, the geometry and projection data is no longer contained, only the data itself.
+
+**Remark:** The `sp` data types do NOT support the `dplyr` package. If you want to use the `%>%` operator and the *verbs* such as `filter`, `mutate`,... as used in the `dplyr` package, you could check and install the [`spdplyr`](https://cran.r-project.org/web/packages/spdplyr/spdplyr.pdf) package. Another option is to start using the [`sf` package](https://cran.r-project.org/web/packages/sf/index.html), the newest package setup with the `tidyverse` environment in mind. [This introduction](http://strimas.com/r/tidy-sf/) and the [documentation of](https://github.com/edzer/sfr) of `sf` is good to start.
+
+## `sp` overlay and aggregations
+
+TODO!
+
+Use over for queries between Spatial* objects
 
 ```{r}
 
-
 ```
+
+## `rgeos` geometry operations
+
+The `rgeos` package provide a number of geometric operations, such as `gArea()`, `gLength()`, `gDistance()`, `gBuffer()`,... (single geometry) or `gIntersection()`, `gUnion()`, `gContains`,... (combining geometries). 
+
+<br><div class="alert alert-info">
+As most commands of rgeos start with g***, use the power of the TAB-button to explore the available functions of the `rgeos` package: `rgeos::g` + TAB
+</div>
+
+These functions operate both on `Spatial*` objects (see above) as well as `Spatial***DataFrame` objects. Most of these functions speak for themselve (or read the manual). An important argument of these functions is `byid`. The `byid` argument determinis if the function should be applied across subgeometries (`TRUE`) or the entire object (`FALSE`). Default is `FALSE`. For example, for the `area` calculation:
+
+```{r}
+gArea(nete) # default is FALSE -> entire object
+```
+versus
+```{r}
+gArea(nete, byid = TRUE)
+```
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+Make a `leaflet` plot (with open street map background) of the `nete` subcatchments, together with the `Centroid` for each of the subgeometries.
+
+<b>Tip 1:</b> Looking for a command that matches the action `centroid` in R, is done by using `??centroid` in the Console.<br>
+<b>Tip 2:</b> Remember that leaflet always expects WGS84 as CRS to make a plot(!)
+</div>
+
+# Mapping vector data
+
+TODO!
+
+
+
+
+% TODO
+%--------
+% **Remark:** When looking for color advice for creating maps, [colorbrewer](http://colorbrewer2.org) is a good resource. Just copy paste teh 
 
