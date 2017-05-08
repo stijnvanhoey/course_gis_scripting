@@ -302,13 +302,23 @@ what did you/I clicked a few months ago?’-style WYSISYG
 * Daily use: great as ductape/glue
 * **Automation** of returning tasks
 
---
+---
 
 <div class="alert alert-warning">
 <b>Waterinfo example</b><br>
-from a script <code>waterinfo_example_1.py</code> towards reusable functionality <code>waterinfo_example_2.py</code>...
-<center><img src="./img/waterinfo_example.png" width="500"></center>
+from editing a script <code>waterinfo_example_1.py</code> towards a reusable functionality <code>waterinfo_example_2.py</code> inside Python and from the command line!
+<center><img src="./img/waterinfo_example.png" width="600"></center>
 </div>
+
+--
+
+Command line examples:
+
+```python
+python waterinfo_example_2.py 0162939042
+python waterinfo_example_2.py 0163079042 --period P10D --windows 12
+python waterinfo_example_2.py 023072043 --period P3D --windows 6 12 24
+```
 
 (check also [this tutorial](https://github.com/jorisvandenbossche/DS-python-data-analysis/blob/master/notebooks/workflow_example_evaluation.ipynb))
 
