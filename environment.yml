@@ -1,149 +1,369 @@
-name: gispython
+name: inbobase
 channels: !!python/tuple
 - !!python/unicode
   'conda-forge'
 - !!python/unicode
   'defaults'
 dependencies:
+- beautifulsoup4=4.5.3=py35_0
+- boto3=1.4.4=py35_0
+- cffi=1.9.1=py35_0
+- chardet=2.3.0=py35_0
+- click=6.7=py35_0
+- cligj=0.4.0=py35_0
+- conda-forge/label/rc::matplotlib=2.0.0rc2=np111py35_2
 - conda-forge::affine=2.0.0.post1=py35_0
+- conda-forge::alabaster=0.7.9=py35_0
+- conda-forge::arrow=0.10.0=py35_0
+- conda-forge::astroid=1.4.8=py35_0
+- conda-forge::babel=2.3.4=py35_0
+- conda-forge::backports.shutil_get_terminal_size=1.0.0=py35_1
+- conda-forge::backports_abc=0.5=py35_0
+- conda-forge::basemap=1.0.8.dev0=np111py35_1
+- conda-forge::binaryornot=0.4.0=py35_2
 - conda-forge::blas=1.1=openblas
-- conda-forge::bleach=1.5.0=py35_0
-- conda-forge::boto3=1.4.4=py35_0
-- conda-forge::botocore=1.5.39=py35_0
-- conda-forge::ca-certificates=2017.1.23=1
-- conda-forge::certifi=2017.4.17=py35_0
-- conda-forge::click=6.7=py35_0
+- conda-forge::bokeh=0.12.5=py35_0
+- conda-forge::botocore=1.5.26=py35_0
+- conda-forge::cairo=1.14.6=0
+- conda-forge::certifi=2016.9.26=py35_0
 - conda-forge::click-plugins=1.0.3=py35_0
-- conda-forge::cligj=0.4.0=py35_0
+- conda-forge::cloudpickle=0.2.2=py35_2
+- conda-forge::cookiecutter=1.5.0=py35_0
 - conda-forge::curl=7.52.1=0
-- conda-forge::cycler=0.10.0=py35_0
-- conda-forge::dbus=1.10.10=3
-- conda-forge::decorator=4.0.11=py35_0
+- conda-forge::dask=0.14.1=py35_0
 - conda-forge::descartes=1.1.0=py35_0
-- conda-forge::docutils=0.13.1=py35_0
-- conda-forge::entrypoints=0.2.2=py35_1
+- conda-forge::distributed=1.16.1=py35_0
+- conda-forge::entrypoints=0.2.2=py35_0
 - conda-forge::expat=2.1.0=2
-- conda-forge::fiona=1.7.6=np112py35_0
-- conda-forge::fontconfig=2.12.1=4
-- conda-forge::freetype=2.7=1
+- conda-forge::fiona=1.7.1=np111py35_1
+- conda-forge::freetype=2.6.3=1
 - conda-forge::freexl=1.0.2=1
-- conda-forge::gdal=2.1.3=np112py35_3
+- conda-forge::gdal=2.1.2=np111py35_6
 - conda-forge::geopandas=0.2.1=py35_3
 - conda-forge::geos=3.5.1=1
 - conda-forge::gettext=0.19.7=1
 - conda-forge::giflib=5.1.4=0
-- conda-forge::glib=2.51.4=0
+- conda-forge::glib=2.51.0=2
 - conda-forge::gmp=6.1.2=0
-- conda-forge::gst-plugins-base=1.8.0=0
-- conda-forge::gstreamer=1.8.0=1
+- conda-forge::gmpy2=2.0.7=py35_1
+- conda-forge::h5py=2.6.0=np111py35_7
+- conda-forge::harfbuzz=1.3.4=0
 - conda-forge::hdf4=4.2.12=0
-- conda-forge::hdf5=1.8.17=10
-- conda-forge::html5lib=0.999=py35_0
-- conda-forge::icu=58.1=1
-- conda-forge::ipykernel=4.6.1=py35_0
+- conda-forge::hdf5=1.8.17=8
+- conda-forge::httplib2=0.9.2=py35_0
+- conda-forge::icu=56.1=4
+- conda-forge::imagesize=0.7.1=py35_0
+- conda-forge::ipykernel=4.5.2=py35_0
 - conda-forge::ipython=6.0.0=py35_0
-- conda-forge::ipython_genutils=0.2.0=py35_0
-- conda-forge::ipywidgets=6.0.0=py35_0
+- conda-forge::ipywidgets=5.2.2=py35_2
+- conda-forge::isort=4.2.5=py35_0
 - conda-forge::jedi=0.10.0=py35_0
-- conda-forge::jinja2=2.9.5=py35_0
+- conda-forge::jinja2-time=0.1.0=py35_0
 - conda-forge::jmespath=0.9.2=py35_0
 - conda-forge::jpeg=9b=0
 - conda-forge::json-c=0.12=0
-- conda-forge::jsonschema=2.5.1=py35_0
-- conda-forge::jupyter=1.0.0=py35_0
-- conda-forge::jupyter_client=5.0.1=py35_0
-- conda-forge::jupyter_console=5.1.0=py35_0
-- conda-forge::jupyter_core=4.3.0=py35_0
+- conda-forge::jupyter_client=4.4.0=py35_0
+- conda-forge::jupyter_console=5.0.0=py35_0
+- conda-forge::jupyter_contrib_core=0.3.0=py35_1
+- conda-forge::jupyter_contrib_nbextensions=0.2.3=py35_0
+- conda-forge::jupyter_core=4.2.1=py35_0
+- conda-forge::jupyter_highlight_selected_word=0.0.7=py35_0
+- conda-forge::jupyter_latex_envs=1.3.4=py35_0
+- conda-forge::jupyter_nbextensions_configurator=0.2.3=py35_0
 - conda-forge::kealib=1.4.6=3
-- conda-forge::krb5=1.14.2=0
-- conda-forge::libdap4=3.18.3=2
+- conda-forge::lazy-object-proxy=1.2.2=py35_0
+- conda-forge::libdap4=3.18.3=1
 - conda-forge::libffi=3.2.1=3
 - conda-forge::libiconv=1.14=4
-- conda-forge::libnetcdf=4.4.1.1=4
-- conda-forge::libpng=1.6.28=0
-- conda-forge::libpq=9.5.4=4
+- conda-forge::libnetcdf=4.4.1.1=2
+- conda-forge::libpq=9.5.4=3
 - conda-forge::libsodium=1.0.10=0
-- conda-forge::libspatialindex=1.8.5=1
-- conda-forge::libspatialite=4.3.0a=14
+- conda-forge::libspatialite=4.3.0a=13
 - conda-forge::libtiff=4.0.6=7
-- conda-forge::libxcb=1.12=1
-- conda-forge::libxml2=2.9.4=4
-- conda-forge::markupsafe=0.23=py35_1
-- conda-forge::matplotlib=2.0.1=np112py35_0
-- conda-forge::mistune=0.7.4=py35_0
-- conda-forge::mplleaflet=0.0.5=py35_1
-- conda-forge::munch=2.1.1=py35_0
-- conda-forge::nbconvert=5.1.1=py35_1
-- conda-forge::nbformat=4.3.0=py35_0
+- conda-forge::libxml2=2.9.3=9
+- conda-forge::locket=0.2.0=py35_1
+- conda-forge::mccabe=0.5.3=py35_0
+- conda-forge::mistune=0.7.3=py35_0
+- conda-forge::mpc=1.0.3=3
+- conda-forge::mpfr=3.1.5=0
+- conda-forge::msgpack-python=0.4.8=py35_0
+- conda-forge::munch=2.1.0=py35_0
+- conda-forge::nbformat=4.2.0=py35_0
 - conda-forge::ncurses=5.9=10
+- conda-forge::nlopt=2.4.2=py35_1
 - conda-forge::notebook=5.0.0=py35_0
-- conda-forge::numpy=1.12.1=py35_blas_openblas_200
-- conda-forge::olefile=0.44=py35_0
-- conda-forge::openblas=0.2.19=2
+- conda-forge::numexpr=2.6.1=np111py35_1
+- conda-forge::numpy=1.11.3=py35_blas_openblas_200
+- conda-forge::openblas=0.2.19=0
 - conda-forge::openjpeg=2.1.2=2
-- conda-forge::openssl=1.0.2k=0
-- conda-forge::pandas=0.19.2=np112py35_1
-- conda-forge::pandoc=1.19.2=0
-- conda-forge::pandocfilters=1.4.1=py35_0
-- conda-forge::pcre=8.39=0
+- conda-forge::pandas=0.19.2=np111py35_1
+- conda-forge::pango=1.40.3=0
+- conda-forge::partd=0.3.7=py35_0
 - conda-forge::pexpect=4.2.1=py35_0
-- conda-forge::pickleshare=0.7.3=py35_0
-- conda-forge::pillow=4.1.0=py35_0
-- conda-forge::pip=9.0.1=py35_0
-- conda-forge::proj4=4.9.3=3
-- conda-forge::prompt_toolkit=1.0.14=py35_0
+- conda-forge::pixman=0.34.0=0
+- conda-forge::poyo=0.4.0=py35_1
+- conda-forge::proj4=4.9.3=2
+- conda-forge::prompt_toolkit=1.0.9=py35_0
 - conda-forge::psycopg2=2.6.2=py35_1
-- conda-forge::ptyprocess=0.5.1=py35_0
-- conda-forge::pygments=2.2.0=py35_0
-- conda-forge::pyparsing=2.2.0=py35_0
+- conda-forge::pycparser=2.17=py35_0
+- conda-forge::pyflakes=1.4.0=py35_0
+- conda-forge::pygments=2.1.3=py35_1
+- conda-forge::pylint=1.6.4=py35_0
+- conda-forge::pyparsing=2.1.10=py35_0
 - conda-forge::pyproj=1.9.5.1=py35_0
-- conda-forge::pyqt=5.6.0=py35_2
 - conda-forge::pysal=1.13.0=py35_0
+- conda-forge::pyshp=1.2.10=py35_0
+- conda-forge::pytables=3.3.0=np111py35_0
 - conda-forge::python=3.5.3=1
 - conda-forge::python-dateutil=2.6.0=py35_0
-- conda-forge::pytz=2017.2=py35_0
-- conda-forge::pyzmq=16.0.2=py35_1
-- conda-forge::qt=5.6.2=2
-- conda-forge::qtconsole=4.3.0=py35_0
-- conda-forge::rasterio=1.0a8=np112py35_0
-- conda-forge::readline=6.2=0
+- conda-forge::pyzmq=16.0.2=py35_0
+- conda-forge::rasterio=1.0a8=np111py35_0
+- conda-forge::requests=2.12.4=py35_0
 - conda-forge::rtree=0.8.3=py35_0
-- conda-forge::s3transfer=0.1.10=py35_1
-- conda-forge::scipy=0.19.0=np112py35_blas_openblas_200
-- conda-forge::setuptools=33.1.1=py35_0
-- conda-forge::shapely=1.5.17=np112py35_2
-- conda-forge::simplegeneric=0.8.1=py35_0
+- conda-forge::s3fs=0.0.9=py35_0
+- conda-forge::scikit-learn=0.18=np111py35_blas_openblas_203
+- conda-forge::scipy=0.18.1=np111py35_blas_openblas_201
+- conda-forge::seaborn=0.7.1=py35_0
+- conda-forge::setuptools=32.3.1=py35_0
+- conda-forge::shapely=1.5.17=np111py35_2
+- conda-forge::singledispatch=3.4.0.3=py35_0
 - conda-forge::sip=4.18=py35_1
 - conda-forge::six=1.10.0=py35_1
 - conda-forge::snuggs=1.4.1=py35_0
-- conda-forge::sqlalchemy=1.1.5=py35_0
+- conda-forge::sphinx=1.5.1=py35_0
+- conda-forge::sqlalchemy=1.1.4=py35_0
 - conda-forge::sqlite=3.13.0=1
-- conda-forge::terminado=0.6=py35_0
-- conda-forge::testpath=0.3=py35_0
 - conda-forge::tk=8.5.19=1
-- conda-forge::tornado=4.5.1=py35_0
-- conda-forge::traitlets=4.3.2=py35_0
+- conda-forge::toolz=0.8.2=py35_0
+- conda-forge::tornado=4.4.2=py35_0
 - conda-forge::wcwidth=0.1.7=py35_0
-- conda-forge::webencodings=0.5=py35_0
-- conda-forge::wheel=0.29.0=py35_0
-- conda-forge::widgetsnbextension=2.0.0=py35_0
-- conda-forge::xerces-c=3.1.4=3
-- conda-forge::xlrd=1.0.0=py35_1
-- conda-forge::xorg-libxau=1.0.8=3
-- conda-forge::xorg-libxdmcp=1.1.2=3
-- conda-forge::xz=5.2.2=0
-- conda-forge::zeromq=4.2.1=1
-- conda-forge::zlib=1.2.11=0
+- conda-forge::whichcraft=0.4.0=py35_1
+- conda-forge::widgetsnbextension=1.2.6=py35_3
+- conda-forge::wrapt=1.10.8=py35_0
+- conda-forge::xerces-c=3.1.4=2
+- conda-forge::zeromq=4.1.5=0
+- conda-forge::zict=0.1.1=py35_0
+- cryptography=1.7.1=py35_0
+- cycler=0.10.0=py35_0
+- decorator=4.0.10=py35_1
+- docutils=0.12=py35_2
+- et_xmlfile=1.0.1=py35_0
+- fastcache=1.0.2=py35_1
+- fontconfig=2.11.1=6
+- future=0.16.0=py35_1
+- heapdict=1.0.0=py35_1
+- idna=2.2=py35_0
+- ioos::libspatialindex=1.8.5=1
+- ipython-notebook=4.0.4=py35_0
+- ipython_genutils=0.1.0=py35_0
+- jbig=2.1=0
+- jdcal=1.3=py35_0
+- jinja2=2.8.1=py35_0
+- jsonschema=2.5.1=py35_0
+- jupyter=1.0.0=py35_3
+- libgcc=5.2.0=0
 - libgfortran=3.0.0=1
+- libpng=1.6.27=0
+- markupsafe=0.23=py35_2
+- mkl=11.3.3=0
+- mpmath=0.19=py35_1
+- nbconvert=4.2.0=py35_0
+- openpyxl=2.4.0=py35_0
+- openssl=1.0.2j=0
+- path.py=9.0.1=py35_0
+- patsy=0.4.1=py35_0
+- pcre=8.39=1
+- pep8=1.7.0=py35_0
+- pickleshare=0.7.4=py35_0
+- pip=9.0.1=py35_1
+- psutil=5.0.1=py35_0
+- ptyprocess=0.5.1=py35_0
+- pyasn1=0.1.9=py35_0
+- pyqt=4.11.4=py35_4
+- pytz=2016.10=py35_0
+- pyyaml=3.12=py35_0
+- qt=4.8.7=3
+- qtawesome=0.4.1=py35_0
+- qtconsole=4.2.1=py35_0
+- qtpy=1.1.2=py35_0
+- r::r=3.2.2=0
+- r::r-assertthat=0.1=r3.2.2_1
+- r::r-base=3.2.2=0
+- r::r-base64enc=0.1_3=r3.2.2_0
+- r::r-bh=1.58.0_1=r3.2.2_0
+- r::r-bitops=1.0_6=r3.2.2_1
+- r::r-boot=1.3_17=r3.2.2_0
+- r::r-car=2.1_0=r3.2.2_0
+- r::r-caret=6.0_62=r3.2.2_0
+- r::r-catools=1.17.1=r3.2.2_2
+- r::r-chron=2.3_47=r3.2.2_0
+- r::r-class=7.3_14=r3.2.2_0
+- r::r-cluster=2.0.3=r3.2.2_0
+- r::r-codetools=0.2_14=r3.2.2_0
+- r::r-colorspace=1.2_6=r3.2.2_0
+- r::r-data.table=1.9.6=r3.2.2_0
+- r::r-dbi=0.3.1=r3.2.2_2
+- r::r-dichromat=2.0_0=r3.2.2_2
+- r::r-digest=0.6.8=r3.2.2_2
+- r::r-dplyr=0.4.3=r3.2.2_0
+- r::r-essentials=1.1=r3.2.2_1
+- r::r-evaluate=0.8=r3.2.2_0
+- r::r-foreach=1.4.3=r3.2.2_0
+- r::r-foreign=0.8_66=r3.2.2_0
+- r::r-formatr=1.2.1=r3.2.2_0
+- r::r-ggplot2=1.0.1=r3.2.2_0
+- r::r-glmnet=2.0_2=r3.2.2_0
+- r::r-gtable=0.1.2=r3.2.2_2
+- r::r-hexbin=1.27.1=r3.2.2_0
+- r::r-highr=0.5.1=r3.2.2_0
+- r::r-htmltools=0.2.6=r3.2.2_2
+- r::r-htmlwidgets=0.5=r3.2.2_0
+- r::r-httpuv=1.3.3=r3.2.2_0
+- r::r-irdisplay=0.3=r3.2.2_0
+- r::r-irkernel=0.5=r3.2.2_1
+- r::r-iterators=1.0.8=r3.2.2_0
+- r::r-jsonlite=0.9.17=r3.2.2_0
+- r::r-kernsmooth=2.23_15=r3.2.2_0
+- r::r-knitr=1.11=r3.2.2_0
+- r::r-labeling=0.3=r3.2.2_1
+- r::r-lattice=0.20_33=r3.2.2_0
+- r::r-lazyeval=0.1.10=r3.2.2_2
+- r::r-lme4=1.1_10=r3.2.2_0
+- r::r-magrittr=1.5=r3.2.2_1
+- r::r-maps=3.0.0_2=r3.2.2_0
+- r::r-markdown=0.7.7=r3.2.2_1
+- r::r-mass=7.3_45=r3.2.2_0
+- r::r-matrix=1.2_2=r3.2.2_0
+- r::r-matrixmodels=0.4_1=r3.2.2_0
+- r::r-mgcv=1.8_9=r3.2.2_0
+- r::r-mime=0.4=r3.2.2_0
+- r::r-minqa=1.2.4=r3.2.2_1
+- r::r-munsell=0.4.2=r3.2.2_1
+- r::r-nlme=3.1_122=r3.2.2_0
+- r::r-nloptr=1.0.4=r3.2.2_1
+- r::r-nnet=7.3_11=r3.2.2_0
+- r::r-pbkrtest=0.4_2=r3.2.2_2
+- r::r-plyr=1.8.3=r3.2.2_0
+- r::r-proto=0.3_10=r3.2.2_1
+- r::r-quantmod=0.4_5=r3.2.2_0
+- r::r-quantreg=5.19=r3.2.2_0
+- r::r-r6=2.1.1=r3.2.2_0
+- r::r-randomforest=4.6_12=r3.2.2_0
+- r::r-rbokeh=0.2.2=r3.2.2_0
+- r::r-rcolorbrewer=1.1_2=r3.2.2_2
+- r::r-rcpp=0.12.2=r3.2.2_0
+- r::r-rcppeigen=0.3.2.5.1=r3.2.2_0
+- r::r-recommended=3.2.2=r3.2.2_0
+- r::r-repr=0.3=r3.2.2_0
+- r::r-reshape2=1.4.1=r3.2.2_1
+- r::r-rjsonio=1.3_0=r3.2.2_1
+- r::r-rmarkdown=0.8.1=r3.2.2_0
+- r::r-rpart=4.1_10=r3.2.2_0
+- r::r-rzmq=0.7.7=r3.2.2_3
+- r::r-scales=0.3.0=r3.2.2_0
+- r::r-shiny=0.12.2=r3.2.2_0
+- r::r-sparsem=1.7=r3.2.2_0
+- r::r-spatial=7.3_11=r3.2.2_0
+- r::r-stringi=1.0_1=r3.2.2_0
+- r::r-stringr=1.0.0=r3.2.2_0
+- r::r-survival=2.38_3=r3.2.2_0
+- r::r-tidyr=0.3.1=r3.2.2_0
+- r::r-ttr=0.23_0=r3.2.2_0
+- r::r-uuid=0.1_2=r3.2.2_0
+- r::r-xtable=1.8_0=r3.2.2_0
+- r::r-xts=0.9_7=r3.2.2_0
+- r::r-yaml=2.1.13=r3.2.2_1
+- r::r-zoo=1.7_12=r3.2.2_1
+- readline=6.2=2
+- rope=0.9.4=py35_1
+- s3transfer=0.1.10=py35_0
+- simplegeneric=0.8.1=py35_1
+- snowballstemmer=1.2.1=py35_0
+- sortedcontainers=1.5.7=py35_0
+- sphinx_rtd_theme=0.1.9=py35_0
+- spyder=3.0.2=py35_0
+- statsmodels=0.6.1=np111py35_1
+- sympy=1.0=py35_0
+- tblib=1.3.2=py35_0
+- terminado=0.6=py35_0
+- traitlets=4.3.1=py35_0
 - util-linux=2.21=0
+- wheel=0.29.0=py35_0
+- xlrd=1.0.0=py35_0
+- xz=5.2.2=1
+- yaml=0.1.6=0
+- zlib=1.2.8=3
 - pip:
+  - alembic==0.9.1
+  - appdirs==1.4.3
   - awscli==1.11.75
+  - backports-abc==0.5
+  - backports.shutil-get-terminal-size==1.0.0
+  - bleach==2.0.0
+  - blinker==1.4
+  - bubblekicker (/home/stijn_vanhoey/githubs/project_belland_bubble_image_analysis)==0.1
+  - cerberus==1.0.1
+  - colorama==0.3.7
+  - coverage==4.3.4
+  - csvcat (/home/stijn_vanhoey/miniconda2/envs/inbobase/lib/python3.5/site-packages)==2.0.1
+  - enum34==1.1.6
+  - et-xmlfile==1.0.1
+  - flask==0.12.1
+  - flask-mail==0.9.1
+  - flask-migrate==2.0.3
+  - flask-script==2.0.5
+  - flask-sqlalchemy==2.2
+  - folium==0.2.0
+  - gitdb2==2.0.0
+  - gitpython==2.1.3
+  - gunicorn==19.7.1
+  - html5lib==0.999999999
+  - inflection==0.3.1
   - ipython-genutils==0.2.0
+  - ipython-sql==0.3.7.1
+  - itsdangerous==0.24
   - jupyter-client==5.0.1
-  - jupyter-console==5.1.0
+  - jupyter-console==5.0.0
+  - jupyter-contrib-core==0.3.0
+  - jupyter-contrib-nbextensions==0.2.3
   - jupyter-core==4.3.0
-  - prompt-toolkit==1.0.14
-  - pyasn1==0.2.3
+  - jupyter-highlight-selected-word==0.0.7
+  - jupyter-kernel-gateway==0.4.0
+  - jupyter-latex-envs==1.3.4
+  - jupyter-nbextensions-configurator==0.2.3
+  - knowledge-repo==0.7.6
+  - mako==1.0.6
+  - markdown==2.6.8
+  - missingno==0.2.4
+  - mplleaflet==0.0.5
+  - nbdime==0.1.0
+  - nbscan==1.0
+  - nbtutor==0.1
+  - nose==1.3.7
+  - packaging==16.8
+  - pandas-profiling==1.4.0
+  - pandocfilters==1.4.1
+  - prettytable==0.7.2
+  - prompt-toolkit==1.0.9
+  - pyaml==16.11.4
+  - pygbif==0.1.4
+  - pypdf2==1.26.0
+  - python-dwca-reader==0.9.2
+  - python-editor==1.0.3
+  - rfc3987==1.3.7
+  - rope-py3k==0.9.4.post1
   - rsa==3.4.2
-prefix: /home/stijn_vanhoey/miniconda2/envs/gispython
+  - salib==1.0.1
+  - smmap2==2.0.1
+  - sphinx-rtd-theme==0.1.9
+  - sqlparse==0.2.1
+  - tables==3.3.0
+  - tabulate==0.7.7
+  - testpath==0.3
+  - vega==0.4.2
+  - wand==0.4.4
+  - webencodings==0.5.1
+  - werkzeug==0.12.1
+  - yolog==0.2.2
+prefix: /home/stijn_vanhoey/miniconda2/envs/inbobase
 

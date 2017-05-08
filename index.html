@@ -40,81 +40,14 @@ class: center, middle
 
 ---
 
-# Setting up a working environment
+# Setting up...
 
-* Working on JupyterHub [1]:
+* Working on JupyterHub:
 
   * Log in at http://lifewatch.inbo.be/jupyterhub
-  * Start a Terminal: `New` (upper right) > `Terminal`
-
-* Working on your own laptop with Anaconda [2]
-
----
-
-# Getting the course materials
-
-* With using git ([1] and recommended for [2])
-
-  First time (inside a terminal or cmd):
-
-  ```
-$ git clone https://github.com/stijnvanhoey/course_gis_scripting.git
-$ cd course_gis_scripting
-  ```
-
-  Updating (on second day):
-
-  ```
-  $ git pull
-  ```
-
-* Without git for [2]: download ZIP from https://github.com/stijnvanhoey/course_gis_scripting (green button "Clone or download")
-
----
-
-# Create an environment with Anaconda (for [2] only)
-(*make sure you have a working internet connection*)
-
-Use our [environment.yml](https://github.com/stijnvanhoey/course_gis_scripting/blob/master/environment.yml) file inside the course folder to set up your Python working environment
-
-In a terminal or cmd, navigate to the `course_gis_scripting` folder and use the following command:
-
-```
-$ conda env create -f environment.yml
-```
-
----
-
-# Create an environment with Anaconda (for [2])
-(*make sure you have a working internet connection*)
-
-When the environment is installed, activate the environment inside the terminal/cmd:
-
-* Windows-users
-```
-$ activate gispython
-```
-
-* Linux/Mac-users
-```
-$ source activate gispython
-```
-
----
-
-# Starting a Jupyter Notebook (for [2])
-
-* In the terminal, navigate to the `course_gis_scripting` directory if not there already
-
-* Ensure that the correct environment is activated.
-
-* Start a jupyter notebook server with
-
-  ```
-$ jupyter notebook
-  ```
-
-  This will open a browser window automatically.
+        * Username: voornaam_achternaam
+        * Paswoord: ...
+  * Go to folder `course_gis_scripting/notebooks`
 
 ---
 class: center, middle
@@ -317,12 +250,6 @@ class: center, middle
 ---
 class: center, middle
 
-![:scale 100%](./img/pyutils.png)
-
-
----
-class: center, middle
-
 # Why Python?
 
 ---
@@ -333,7 +260,7 @@ class: center, middle
 ---
 
 ## …OPEN SOURCE
-* No license costs!
+* No license issues!
 
 ---
 
@@ -345,18 +272,19 @@ class: center, middle
 
 ---
 
-## …READABLE
+## …REPRODUCIBLE
 
 .center[
+
+instead of
 ```
-It's easy to learn, easy to read and fast to develop
+what did you/I clicked a few months ago?’-style WYSISYG
 ```
 ]
-<br><br><br>
 
 ---
 
-## …REPRODUCIBLE
+## …REUSE
 
 .center[
 
@@ -376,13 +304,89 @@ what did you/I clicked a few months ago?’-style WYSISYG
 
 ---
 
-## …SO WHAT? The Holy Grail ? No!
-* Commercial packages give specific support  and more direct help-functions (cfr. MATLAB, ArcGIS)
+<div class="alert alert-warning">
+<b>Waterinfo example</b><br>
+from editing a script <code>waterinfo_example_1.py</code> towards a reusable functionality <code>waterinfo_example_2.py</code> inside Python and from the command line!
+<center><img src="./img/waterinfo_example.png" width="600"></center>
+</div>
+
+--
+
+Command line examples:
+
+```python
+python waterinfo_example_2.py 0162939042
+python waterinfo_example_2.py 0163079042 --period P10D --windows 12
+python waterinfo_example_2.py 023072043 --period P3D --windows 6 12 24
+```
+
+(check also [this tutorial](https://github.com/jorisvandenbossche/DS-python-data-analysis/blob/master/notebooks/workflow_example_evaluation.ipynb))
+
+
+---
+
+## SO WHAT? The Holy Grail ? No!
+* Commercial packages give specific support  and more consistent help-functions (cfr. MATLAB, ArcGIS)
 * Commercial packages can be more client-friendly
 * For hard numercrunching stuff, NOT the fastest solution
 * Fortran, C++ etc are also ‘widespread’, so python is just a language amongst the others
 * Risk of getting lost in the forest/flood of ‘useful packages’
 
+---
+class: center, middle
+
+# Conda
+
+---
+
+# Conda
+
+### Why using (ana/mini)conda?
+
+- Consistent package manager across Windows, Mac and Linux
+- Many precompiled packages available
+- ... *more technical arguments*...
+
+--
+
+<div class="alert alert-success">
+<b>SUMMARY:</b> Easy to install packages!
+</div>
+
+--
+
+### Why different environments?
+
+- Manage the dependencies of a specific project/paper/group/...
+- You can install different version of Python and other packages alongside on your computer
+- Easily share environments with other people
+
+--
+
+<div class="alert alert-success">
+<b>SUMMARY:</b> Make sure you work with the same packages!
+</div>
+
+---
+
+# Conda: info
+
+* [Anaconda Navigator info](https://docs.continuum.io/anaconda/navigator-using)
+    * add channel: `conda-forge` (!)
+* [Tutorials Anaconda Navigator](https://docs.continuum.io/anaconda/navigator-tutorial)
+
+---
+
+## Hungry?
+
+* [Python for ecologists](http://www.datacarpentry.org/python-ecology-lesson/): introduction for people with no programming experience
+* [Scipy lecture notes](http://www.scipy-lectures.org/) (!): Python, Numpy, Matplotlib, Scipy
+* [Python for data analysis](https://github.com/jorisvandenbossche/DS-python-data-analysis): Pandas
+
+---
+class: center, middle
+
+![:scale 100%](./img/pyutils.png)
 
 ---
 class: center, middle
