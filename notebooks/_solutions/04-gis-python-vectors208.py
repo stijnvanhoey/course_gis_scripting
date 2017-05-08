@@ -1,0 +1,1 @@
+gpd.sjoin(geo_df, deelbekkens[["BEKNAAM", "UIDN", "geometry"]], how='left', op="within")

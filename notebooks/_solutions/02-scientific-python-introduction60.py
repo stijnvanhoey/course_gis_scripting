@@ -1,0 +1,1 @@
+np.unique(nete_bodem_subset)

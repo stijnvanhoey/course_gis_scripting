@@ -1,0 +1,1 @@
+gpd.read_file('../data/EUgrid10.geojson').head(1)
