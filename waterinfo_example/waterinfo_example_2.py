@@ -73,6 +73,7 @@ def plot_waterheight_timeseries(jsondata, moving_windows=[3, 6, 12]):
     ax.set_ylabel("Waterhoogte [m TAW]")
     ax.set_title("Waterpeil " + jsondata['station_name'])
     ax.set_xlabel("")
+    #ax.set_ylim([0, waterhoogte["Value"].max()+  waterhoogte["Value"].max()*0.1])
     ax.legend()
 
     return fig, ax
