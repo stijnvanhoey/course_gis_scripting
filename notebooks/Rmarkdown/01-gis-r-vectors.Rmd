@@ -12,7 +12,8 @@ library('rgdal')
 library('sp')
 library('raster')
 library('rgeos')
-library('dplyr')
+library('leaflet')
+
 ```
 
 # Spatial data objects: `sp`
@@ -72,7 +73,8 @@ library(rgeos)
 
 As an example: adding a buffer to our `SpatialPoints` object:
 ```{r}
-pts_lambert_buffer <- gBuffer(pts_lambert, byid = TRUE, width = 2000) # gbuffer from the rgeos package
+# gbuffer from the rgeos package (see later)
+pts_lambert_buffer <- gBuffer(pts_lambert, byid = TRUE, width = 2000) 
 ```
 
 Hence, the result is again a `Spatial*` object, i.e. a `SpatialPolygons` object. A plot of the `pts_lambert` and the `pts_lambert_buffered` together looks as follows:
@@ -86,6 +88,7 @@ plot(pts_lambert, add = TRUE, col = 'red', las = 1)
 For quick data exploration of such a small data set, an interactive visualisation provides better insight. The [leaflet](https://rstudio.github.io/leaflet/) package is well-documented and easy to use, certainly when the `dplyr` piping is familiar to use:
 
 ```{r}
+wgs_84 <- CRS("+init=epsg:4326")
 leaflet() %>%  
     addTiles() %>%  # provide a default openstreetmap background layer to the image
     addCircles(data = pts)  %>% # Add the points to the map
@@ -232,10 +235,10 @@ head(ogrDrivers()) # Just the first 6 records are shown here
 
 For data sets with multiple layers, the reading of a specific Layer is supported as well. For example, when the driver to read ESRI FileGeoDatabases is present, following commands will be useful as well:
 
-```{r, eval=FALSE, include=FALSE}
-# information about the data (without actually reading the data itself)
+```{r, eval=FALSE}
+# Information about the data (without actually reading the data itself)
 ogrInfo(dsn = "name_filegeodatabase.gdb") 
-# enlist the names of the layers in the dataset
+# List the names of the layers in the dataset
 ogrListLayers(dsn = "name_filegeodatabase.gdb")
 # Reading a specific layer
 readOGR(dsn = "name_filegeodatabase.gdb", layer = "layer_of_interest"
@@ -268,10 +271,6 @@ TODO!
 
 Use over for queries between Spatial* objects
 
-```{r}
-
-```
-
 ## `rgeos` geometry operations
 
 The `rgeos` package provide a number of geometric operations, such as `gArea()`, `gLength()`, `gDistance()`, `gBuffer()`,... (single geometry) or `gIntersection()`, `gUnion()`, `gContains`,... (combining geometries). 
@@ -288,6 +287,31 @@ gArea(nete) # default is FALSE -> entire object
 versus
 ```{r}
 gArea(nete, byid = TRUE)
+```
+
+Comparison of geometries involves two geometries:
+
+```{r}
+vertical <- eu_10grid[grep('E400', eu_10grid$CellCode), ]
+horizontal <- eu_10grid[grep('N311', eu_10grid$CellCode), ]
+
+comparison <- gContains(vertical, horizontal, 
+                        byid = TRUE, checkValidity = TRUE, 
+                        returnDense = TRUE) # Test also with gIntersects
+true_ids <- as.data.frame(which(comparison, arr.ind = TRUE)) # Find the TRUE elements
+true_ids
+```
+
+```{r}
+# adjusting the colors transparency
+blue <- adjustcolor("blue", alpha.f = 0.3) 
+red <- adjustcolor("darkred", alpha.f = 0.3) 
+
+# plot the cells selected by the geometry comparison:
+plot(vertical)
+plot(vertical[true_ids$col,], add = TRUE, col = blue)
+plot(horizontal, add = TRUE)
+plot(horizontal[true_ids$row,], add = TRUE, col = red)
 ```
 
 <br><div class="alert alert-success">
