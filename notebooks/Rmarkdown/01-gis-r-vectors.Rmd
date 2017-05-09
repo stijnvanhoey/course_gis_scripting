@@ -7,7 +7,7 @@ output:
 
 # Setup
 
-Make sure your have `rgdal`, `rgeos`, `raster` and `sp` installed:
+Make sure your have `rgdal`, `rgeos`, `raster`, `ggmap` and `sp` installed:
     
 ```{r, message=FALSE, warning=FALSE}
 library('rgdal')
@@ -15,6 +15,7 @@ library('sp')
 library('raster')
 library('rgeos')
 library('leaflet')
+library('ggmap')
 ```
 
 # Spatial data objects: `sp`
@@ -270,7 +271,7 @@ Hence, the geometry and projection data is no longer contained, only the data it
 
 ## `sp` overlay and aggregations
 
-
+# TODODODODO
 
 Use over for queries between Spatial* objects
 
@@ -341,7 +342,9 @@ pts_recorded_df
 
 ```{r}
 ggplot(pts_recorded_df, aes(x = longitude, y = latitude)) +
-    geom_point()
+    geom_point() +
+    geom_text(size = 2, aes(label = scientific_names), 
+              check_overlap = TRUE, hjust = -0.1)
 ```
 
 For `Lines` and `Polygons`, the translation requires an entire interpretation of the configuration towards a `data.frame`. This functionality is provided by `fortify`, which translates the **spatial** information:
@@ -397,25 +400,47 @@ ggplot(nete_df, aes(x = long, y = lat)) +
 
 **Remark:** Adding `group = group` (grouping according to the by fortify derived groups) is required to plot the individual polygons separately(!)
 
-
-
-
 ## `ggmap`
 
+The `ggmap` package is the spatial plotting extension to `ggplot2`. It provides the ability to integrate the graphs of `ggplot2` with spatial backgrounds coming from online resources such as Google maps, [stamen maps](http://maps.stamen.com/#terrain/12/37.7706/-122.3782) and OpenStreetMap. The most convenient way to setup these background maps is to use the `ggmap::get_***` functions. For example, using the `toner-background` of stamen:
 
-## Other options...
+```{r, message=FALSE}
+extent <- c(left = 2.54, bottom = 49.46, right = 6.4, top = 51.51)
+map <- get_stamenmap(extent, zoom = 8, maptype = "toner-background")
+belgium <- ggmap(map)
+belgium
+```
 
-[`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html)
+Just as with the OpenStreetMap integration of the `leaflet` package, these spatial background coming from online resources use `WGS84` (decimal degrees). Make sure to convert the vector data to the WGS84 `CRS`:
 
+```{r, message=FALSE}
+nete_wgs84 <- spTransform(nete, wgs_84)
+nete_df_wgs84 <- fortify(nete_wgs84)
+nete_df_wgs84 <- merge(nete_df_wgs84, as.data.frame(nete_wgs84))
+    
+belgium +
+    geom_path(aes(x = long, y = lat, group = group), 
+          data = nete_df_wgs84, colour = "red")
+```
 
-[`maptools`]()
+The `bbox` can be defined more specifically to improve the boundaries of the background image. Focusing on the Nete catchment:
 
+```{r, message=FALSE}
+extent <- c(left = 4.42, bottom = 50.9, right = 5.4, top = 51.4)
+map <- get_stamenmap(bbox = extent, zoom = 10, maptype = "toner-hybrid")
+ggmap(map) + 
+    geom_path(aes(x = long, y = lat, group = group), 
+              data = nete_df_wgs84, colour = "red")
+```
 
+**Remark:** each of these online providers have different `maptype` options. Check the help of these functions to see the options (e.g. `?get_stamenmap`).
 
-
-% TODO
-%--------
-% **Remark:** When looking for color advice for creating maps, [colorbrewer](http://colorbrewer2.org) is a good resource. Just copy paste the 
-
-
+The usage of Google maps enables the option to provide a *google maps search* as center of the image
+```{r, message=FALSE}
+map <- get_googlemap(center = "Geel Belgium",  scale = 2, 
+                     maptype = "terrain", zoom = 9)
+ggmap(map) +
+    geom_polygon(aes(x = long, y = lat, group = group, fill = id, alpha = 0.5), 
+          data = nete_df_wgs84, colour = "white")
+```
 
