@@ -1,26 +1,27 @@
 ---
 title: "GIS R vectors"
-output: html_notebook
+output:
+  html_notebook: default
+  html_document: default
 ---
 
 # Setup
 
 Make sure your have `rgdal`, `rgeos`, `raster` and `sp` installed:
     
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library('rgdal')
 library('sp')
 library('raster')
 library('rgeos')
 library('leaflet')
-
 ```
 
 # Spatial data objects: `sp`
 
-Package `sp` is the central package supporting spatial data analysis in R. `sp` defines a set of classes to represent spatial data. A class defines a particular data type. The `data.frame` is an example of a class. Any particular data.frame you create is an **object** (instantiation) of that class.
+Package `sp` is the central package supporting spatial data analysis in R. `sp` defines a set of classes to represent spatial data. A class defines a particular data type. The `data.frame` is an example of a class. Any particular data.frame you create is an **object** (instance) of that class.
 
-In fact, the `sp` package does not provide many functions to modify or analyse spatial data; but the classes it defines are used in >100 other R packages that provide specific functionalities. The classes `sp` defines are mostly starting with `Spatial*`. For vector data, the basic types are the `SpatialPoints`, `SpatialLines`, and `SpatialPolygons`. These classes only represent **geometries** (i.e. the spatial information). To link the saptial information to a data-table, classes are available with these names plus `DataFrame`, for example, `SpatialPolygonsDataFrame` and `SpatialPointsDataFrame`.
+In fact, the `sp` package does not provide many functions to modify or analyse spatial data; but the classes it defines are used in >100 other R packages that provide specific functionalities. The classes `sp` defines are mostly starting with `Spatial*`. For vector data, the basic types are the `SpatialPoints`, `SpatialLines`, and `SpatialPolygons`. These classes only represent **geometries** (i.e. the spatial information). To link the spatial information to a data-table, classes are available with these names plus `DataFrame`, for example, `SpatialPolygonsDataFrame` and `SpatialPointsDataFrame`.
 
 ## Geometries
 
@@ -55,7 +56,9 @@ pts <- SpatialPoints(lonlat, proj4string = crs_wgs84)
 showDefault(pts)
 ```
 
-Hence, the projection information is provided and our geometry is aware of the spatial context. **Remark**: Assigning a CRS is like labeling something. You need to provide the label that corresponds to the item. Not to what you would like it to be. The latter requires a transformation.
+Hence, the projection information is provided and our geometry is aware of the spatial context. 
+
+**Remark**: Assigning a CRS is like labeling something. You need to provide the label that corresponds to the item. Not to what you would like it to be. The latter requires a transformation.
 
 The definition of the geometry as an object of the `SpatialPoints` class, provides a number of spatial functionalities that are not directly available to *default* matrices. As said in the introduction, the `sp` class mainly focuses on the classes (objects) and not on the functionalities. However, an essential functionality provided by `sp` itself (apart from `over` and `aggregate`), is the **transformation of the coordinate reference system (CRS)**:
 
@@ -85,7 +88,7 @@ plot(pts_lambert_buffer, border = 'blue',
 plot(pts_lambert, add = TRUE, col = 'red', las = 1)
 ```
 
-For quick data exploration of such a small data set, an interactive visualisation provides better insight. The [leaflet](https://rstudio.github.io/leaflet/) package is well-documented and easy to use, certainly when the `dplyr` piping is familiar to use:
+For quick data exploration of such a small data set, an interactive visualization provides better insight. The [leaflet](https://rstudio.github.io/leaflet/) package is well-documented and easy to use, certainly when the `dplyr` piping is familiar to use:
 
 ```{r}
 wgs_84 <- CRS("+init=epsg:4326")
@@ -106,9 +109,9 @@ Check the [documentation of the leaflet Package](https://rstudio.github.io/leafl
 
 ## Spatial***DataFrame
 
-The geometry classes provided by `sp` contain the spatial information, but do not add data to these points (or lines/polygons). The data attribute table is typically provided as a `data.frame`. For this reason, `sp` also provides classes that link the geometries with DatFrames: `SpatialPointsDataFrame`, `SpatialLinesDataFrame` and `SpatialPolygonsDataFrame`. 
+The geometry classes provided by `sp` contain the spatial information, but do not add data to these points (or lines/polygons). The data attribute table is typically provided as a `data.frame`. For this reason, `sp` also provides classes that link the geometries with DataFrames: `SpatialPointsDataFrame`, `SpatialLinesDataFrame` and `SpatialPolygonsDataFrame`. 
 
-Let's assume that for each of the coorindates defined above, we also have information about an `identifier` and a `scientificName`:
+Let's assume that for each of the coordinates defined above, we also have information about an `identifier` and a `scientificName`:
 
 ```{r}
 identifiers <- c('INBO:NBN:BFN00179000029DL', 'INBO:NBN:BFN001790000A584', 
@@ -163,8 +166,8 @@ wgs_lambert
 
 which can be used in other functions/methods or used to **support the transformation of the coordinate reference system** of *spatial aware objects*. Hence, transformation won't work on a default vector or matrix object:
 
-```{r}
-spTransform(c(98710.32800000161, 162573.7030000016), wgs_84)
+```{r, error=TRUE}
+#sp::spTransform(c(98710.32800000161, 162573.7030000016), wgs_84)
 ```
 
 But after transformation of the single coordinate to a `SpatialPoints` object, the `spTransform` function can be used:
@@ -189,7 +192,7 @@ pts_recorded_wgs84
 
 As your regularly encounter point coordinates that need conversion to another projection system, you decide to make a functions for future use:<br>
 
-For any `data.frame`(!) with coordinate information in a known coordinate reference system, update the columns with the x/y information to another coordinate system. The fuction returns the updated `data.frame`.
+For any `data.frame`(!) with coordinate information in a known coordinate reference system, update the columns with the x/y information to another coordinate system. The function returns the updated `data.frame`.
 
 The function will probably look more or less like this:<br><br>
 
@@ -200,7 +203,7 @@ The function will probably look more or less like this:<br><br>
         return(df)
 </div>
 
-**Remark:** This function is part of an [`inbo-rutil` script,  ](https://github.com/inbo/inbo-rutils/blob/master/gis/guess_projection.R) to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coodinate reference systems.
+**Remark:** This function is part of an [`inbo-rutil` script,  ](https://github.com/inbo/inbo-rutils/blob/master/gis/guess_projection.R) to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coordinate reference systems.
 
 # Reading data: `rgdal`
 
@@ -218,7 +221,7 @@ deelbekkens
 plot(deelbekkens)
 ```
 
-Besides shapefiles, other vector data formats can be read as well. Certainly `geojson` is a increasingly used fata fromat for feature (vector) data sets:
+Besides shapefiles, other vector data formats can be read as well. Certainly `geojson` is a increasingly used data format for feature (vector) data sets:
 
 ```{r}
 eu_10grid <- readOGR("../../data/EUgrid10.geojson")
@@ -248,14 +251,14 @@ readOGR(dsn = "name_filegeodatabase.gdb", layer = "layer_of_interest"
 
 ## DataFrame alike manipulation
 
-Vector data represented as `Spatial***DataFrame` can be subselected as a DataFrame. For example, selecting only the `deelbekkens` that are in the `Netebekken` (boolean indexing):
+Vector data represented as `Spatial***DataFrame` can be sub selected as a DataFrame. For example, selecting only the `deelbekkens` that are in the `Netebekken` (Boolean indexing):
 
 ```{r}
 nete <- deelbekkens[deelbekkens$BEKNAAM == "Netebekken", ]
 plot(nete)
 ```
 
-The result of the selection is again a `SpatialPolygonsDataFrame`. When only interested in the data itself, the selection of the attribute data alone can be done by converting the data to a dataframe. 
+The result of the selection is again a `SpatialPolygonsDataFrame`. When only interested in the data itself, the selection of the attribute data alone can be done by converting the data to a DataFrame. 
 
 ```{r}
 head(as.data.frame(nete))
@@ -267,7 +270,7 @@ Hence, the geometry and projection data is no longer contained, only the data it
 
 ## `sp` overlay and aggregations
 
-TODO!
+
 
 Use over for queries between Spatial* objects
 
@@ -279,7 +282,7 @@ The `rgeos` package provide a number of geometric operations, such as `gArea()`,
 As most commands of rgeos start with g***, use the power of the TAB-button to explore the available functions of the `rgeos` package: `rgeos::g` + TAB
 </div>
 
-These functions operate both on `Spatial*` objects (see above) as well as `Spatial***DataFrame` objects. Most of these functions speak for themselve (or read the manual). An important argument of these functions is `byid`. The `byid` argument determinis if the function should be applied across subgeometries (`TRUE`) or the entire object (`FALSE`). Default is `FALSE`. For example, for the `area` calculation:
+These functions operate both on `Spatial*` objects (see above) as well as `Spatial***DataFrame` objects. Most of these functions speak for themselves (or read the manual). An important argument of these functions is `byid`. The `byid` argument determines if the function should be applied across sub geometries (`TRUE`) or the entire object (`FALSE`). Default is `FALSE`. For example, for the `area` calculation:
 
 ```{r}
 gArea(nete) # default is FALSE -> entire object
@@ -317,7 +320,7 @@ plot(horizontal[true_ids$row,], add = TRUE, col = red)
 <br><div class="alert alert-success">
 <b>EXERCISE</b>
 
-Make a `leaflet` plot (with open street map background) of the `nete` subcatchments, together with the `Centroid` for each of the subgeometries.
+Make a `leaflet` plot (with open street map background) of the `nete` sub catchments, together with the `Centroid` for each of the sub geometries.
 
 <b>Tip 1:</b> Looking for a command that matches the action `centroid` in R, is done by using `??centroid` in the Console.<br>
 <b>Tip 2:</b> Remember that leaflet always expects WGS84 as CRS to make a plot(!)
@@ -325,12 +328,94 @@ Make a `leaflet` plot (with open street map background) of the `nete` subcatchme
 
 # Mapping vector data
 
-TODO!
+## `ggplot`
+
+When working with DataFrame data, the application of `ggplot2` is typical. Hence, it would be convenient to use `ggplot2` (and the syntax) to plot `Spatial***DataFrame` as well. As `ggplot2` only works on `data.frame` objects, a translation need to be made between the `Spatial***DataFrame` and a default `data.frame`. 
+
+For `SpatialPointsDataFrame` this is not really an issue, as the `longitude` and `latitude` columns provide the geometry information and can be used as such in `ggplot` by directly converting the data to a `data.fram`
+
+```{r}
+pts_recorded_df <- as.data.frame(pts_recorded)
+pts_recorded_df
+```
+
+```{r}
+ggplot(pts_recorded_df, aes(x = longitude, y = latitude)) +
+    geom_point()
+```
+
+For `Lines` and `Polygons`, the translation requires an entire interpretation of the configuration towards a `data.frame`. This functionality is provided by `fortify`, which translates the **spatial** information:
+
+```{r, message=FALSE}
+nete_df <- fortify(nete)
+head(nete_df)
+```
+
+```{r}
+class(nete_df)
+```
+
+The individual columns of the resulting `data.frame` describe the following elements:
+
+* `long` and `lat`: x and y coordinates
+* `order`: sequence of the polygones or lines
+* `hole`: identifies whether the feature the coordinates are part of define a hole
+* `piece`: collects all the points that make a single feature (polygon/line), i.e. 1 attributes table line
+• `group`: defines the subpolygons or sublines (in case of multipolygon/multiline features)
+• `id`: row identifiers of the attribute table (data)
+
+Still, the added value of using `ggplot2` is to use the attribute data to define colors,... As the attribute data table is available and we have an identifier `id`, we can JOIN the attribute data to the spatial information after retrieving the **attribute** data with the `as.data.frame` function:
+
+```{r}
+nete_df <- merge(nete_df, as.data.frame(nete))
+head(nete_df)
+```
+
+<br><div class="alert alert-info">
+<b>REMEMBER</b>
+
+In order to plot `SpatialLinesDataFrame` or `SpatialPolygonsDataFrame` data, the **spatial data** (with `fortify()`) need to be merged with the **attribute data** (with `as.data.frame`) to have a `ggplot2` compatible `data.frame`!
+</div>
+
+This seems to be a useful small tooling for a custom R function...
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+Write a function called `prepare_spatial_for_ggplot` that takes a `SpatialLinesDataFrame` or `SpatialPolygonsDataFrame` as input and execute the necessary steps (described above: `fortify`/`as.data.frame`/`merge`) to enable the plotting with `ggplot2`. The output of the function is a `data.frame`.
+</div>
+
+For plotting `Lines`, use the `ggplot` function `geom_path()` (and NOT `geom_line()`). For polygons, you can choose:
+* `geom_path()`: only plot the borders
+* `geom_polygon()`: usa a fill color for the polygons
+
+```{r}
+ggplot(nete_df, aes(x = long, y = lat)) +
+    geom_polygon(aes(group = group, fill = id)) +
+    coord_fixed()
+```
+
+**Remark:** Adding `group = group` (grouping according to the by fortify derived groups) is required to plot the individual polygons separately(!)
+
+
+
+
+## `ggmap`
+
+
+## Other options...
+
+[`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html)
+
+
+[`maptools`]()
 
 
 
 
 % TODO
 %--------
-% **Remark:** When looking for color advice for creating maps, [colorbrewer](http://colorbrewer2.org) is a good resource. Just copy paste teh 
+% **Remark:** When looking for color advice for creating maps, [colorbrewer](http://colorbrewer2.org) is a good resource. Just copy paste the 
+
+
 
