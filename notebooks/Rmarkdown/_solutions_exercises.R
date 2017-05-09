@@ -50,7 +50,20 @@ leaflet() %>%
                color = 'red')
 
 
+##-----------------------------------------------------------------------
+## 4. ggplot preparation of spatialLines- and spatial PolygonesDataFrames
+##-----------------------------------------------------------------------
 
+#' Prepare a SpatialLinesDataFrame or SpatialPolygonsDataFrame for ggplot2
+#' plotting
+#'
+#' @param spatial_df SpatialLinesDataFrame or SpatialPolygonsDataFrame
+#' @return data.frame
+prepare_spatial_for_ggplot <- function(spatial_df){
+
+    df <- fortify(spatial_df)
+    merge(df, as.data.frame(spatial_df))
+}
 
 
 
