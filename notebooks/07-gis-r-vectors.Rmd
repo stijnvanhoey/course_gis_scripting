@@ -5,16 +5,20 @@ output:
   html_document: default
 ---
 
+```{r setup, echo=FALSE, cache=FALSE}
+knitr::read_chunk('./_solutions/_solutions_exercises.R')
+```
+
 # Setup
 
 Make sure your have `rgdal`, `rgeos`, `raster`, `ggmap`, `leaflet` and `sp` installed:
 
-```{r, eval=FALSE, include=FALSE}
+```{r install, eval=FALSE, include=FALSE}
 install.packages(c("rgdal", "rgeos", "raster", "ggmap", "leaflet", "sp"))
 ```
 
     
-```{r, message=FALSE, warning=FALSE}
+```{r load, message=FALSE, warning=FALSE}
 library('rgdal')
 library('sp')
 library('raster')
@@ -34,7 +38,7 @@ In fact, the `sp` package does not provide many functions to modify or analyse s
 ## Geometries
 
 Consider the following vectors with coordinate information:
-```{r}
+```{r intro_data}
 longitude <- c(4.4543, 5.02789, 4.94202, 4.49238, 4.49054, 4.54044, 5.95192, 
                4.49496, 4.4958, 5.68327, 4.49054, 4.49054, 4.4958, 4.48938)
 latitude <- c(51.33847, 51.24824, 51.24325, 51.26218, 51.25701, 51.27518, 
@@ -45,20 +49,20 @@ lonlat <- cbind(longitude, latitude)
 
 Besides the numbers itself, the variable `lonlat` is not aware of any spatial context (it is just a `matrix` object). 
 
-```{r}
+```{r intro_spatialload}
 pts <- SpatialPoints(lonlat)
 class(pts)
 ```
 
 We converted the vector to an object of `SpatialPoints`, which contains, beside the matrix data, additional information:
 
-```{r}
+```{r intro_show}
 showDefault(pts)
 ```
 
 So we see that the object has the coordinates we supplied, but also a `bbox`. This is a ‘bounding box’, or the ‘spatial extent’ that was computed from the coordinates. There is also a `proj4string`. This stores the coordinate reference system (CRS). We did not provide the crs so it is unknown (NA). That is not good, so let’s recreate the object, and now provide a crs. We'll come back to the projection definition later:
 
-```{r}
+```{r intro_setcrs}
 crs_wgs84 <- CRS("+init=epsg:4326")
 pts <- SpatialPoints(lonlat, proj4string = crs_wgs84)
 showDefault(pts)
@@ -70,21 +74,21 @@ Hence, the projection information is provided and our geometry is aware of the s
 
 The definition of the geometry as an object of the `SpatialPoints` class, provides a number of spatial functionalities that are not directly available to *default* matrices. As said in the introduction, the `sp` class mainly focuses on the classes (objects) and not on the functionalities. However, an essential functionality provided by `sp` itself (apart from `over` and `aggregate`), is the **transformation of the coordinate reference system (CRS)**:
 
-```{r}
+```{r intro_transform}
 crs_lambert <- CRS("+init=epsg:31370") 
 pts_lambert <- spTransform(pts, crs_lambert)
 showDefault(pts_lambert)
 ```
 
-Other (geometric) operations are provided by (a huge amount of) additional R Packages. The `rgeos` package is n important package to check for these functionalities. As an example: adding a buffer to our `SpatialPoints` object:
-```{r}
+Other (geometric) operations are provided by (a huge amount of) additional R Packages. The `rgeos` package is an important package to check for these functionalities. As an example: adding a buffer to our `SpatialPoints` object:
+```{r intro_buffer}
 # gbuffer from the rgeos package (see later)
 pts_lambert_buffer <- gBuffer(pts_lambert, byid = TRUE, width = 2000) 
 ```
 
 Hence, the result is again a `Spatial*` object, i.e. a `SpatialPolygons` object. A plot of the `pts_lambert` and the `pts_lambert_buffered` together looks as follows:
 
-```{r}
+```{r intro_plotstatic}
 plot(pts_lambert_buffer, border = 'blue', 
      col = 'yellow', lwd = 3, axes = TRUE)
 plot(pts_lambert, add = TRUE, col = 'red', las = 1)
@@ -92,7 +96,7 @@ plot(pts_lambert, add = TRUE, col = 'red', las = 1)
 
 For quick data exploration of such a small data set, an interactive visualization provides better insight. The [leaflet](https://rstudio.github.io/leaflet/) package is well-documented and easy to use, certainly when the `dplyr` piping is familiar to use:
 
-```{r}
+```{r intro_plotinteract}
 wgs_84 <- CRS("+init=epsg:4326")
 leaflet() %>%  
     addTiles() %>%  # provide a default openstreetmap background layer to the image
@@ -109,13 +113,17 @@ Check the [documentation of the leaflet Package](https://rstudio.github.io/leafl
 (2) The buffers should not be filled and have a red color.
 </div>
 
+The output should look like:
+```{r exercise1, echo=FALSE, eval=TRUE}
+```
+
 ## Spatial***DataFrame
 
 The geometry classes provided by `sp` contain the spatial information, but do not add data to these points (or lines/polygons). The data attribute table is typically provided as a `data.frame`. For this reason, `sp` also provides classes that link the geometries with DataFrames: `SpatialPointsDataFrame`, `SpatialLinesDataFrame` and `SpatialPolygonsDataFrame`. 
 
 Let's assume that for each of the coordinates defined above, we also have information about an `identifier` and a `scientificName`:
 
-```{r}
+```{r sp_create_data}
 identifiers <- c('INBO:NBN:BFN00179000029DL', 'INBO:NBN:BFN001790000A584', 
                  'INBO:NBN:BFN001790000AACI', 'INBO:NBN:BFN0017900009DOC', 
                  'INBO:NBN:BFN001790000A4J0', 'INBO:NBN:BFN0017900009DO8', 
@@ -136,30 +144,42 @@ head(recorded)
 
 Hence, the `SpatialPointsDataFrame` combines the spatial information (`pts_lambert`) with the recorded data (`recorded`):
 
-```{r}
+```{r sp_create_df}
 pts_recorded <- SpatialPointsDataFrame(pts_lambert, data = recorded)
 pts_recorded
 ```
 
-For the moment, the take home message is that `Spatial***DataFrame` bring together the attribute data (`data.frame`), the coordinates (`geometry`) and the coordinate reference system (`crs`). 
+For the moment, the take home message is that `Spatial***DataFrame` bring together the attribute data (`data.frame`), the coordinates (`geometry`) and the coordinate reference system (`crs`): 
+
+```{r sp_data_attrib}
+head(pts_recorded@data)
+```
+
+```{r sp_coord_attrib}
+head(pts_recorded@coords)
+```
+
+```{r sp_proj_attrib}
+pts_recorded@proj4string
+```
 
 ## Projection
 
 In the previous section, we already used the `CRS` class definition to specify the coordinate reference system. As many other systems, R uses the [PROJ.4](http://proj4.org/) notation to define the CRS. The number of parameters depends on the projection. However, the easiest way is (mostly) using the [`EPSG` code](http://spatialreference.org/), for example:
 
-```{r, eval=FALSE, include=FALSE}
+```{r proj_epsg, eval=FALSE, include=FALSE}
 CRS("+init=epsg:4326")
 CRS("+init=epsg:31370")
 ```
 
 But other options are available as well:
 
-```{r}
+```{r proj_utm}
 CRS("+proj=utm +zone=32")
 ```
 
 In general, the definition of the CRS (input argument) should ba a string setup up by one or more `+<arg>=<value>` combinations, each of them separated by a blank value: `+<arg1>=<value1> +<arg2>=<value2>`. The CRS-creation returns an object (with a variable name you can assign):
-```{r}
+```{r proj_objects}
 wgs_84 <- CRS("+init=epsg:4326")
 wgs_lambert <- CRS("+init=epsg:31370")
 wgs_84
@@ -168,12 +188,12 @@ wgs_lambert
 
 which can be used in other functions/methods or used to **support the transformation of the coordinate reference system** of *spatial aware objects*. Hence, transformation won't work on a default vector or matrix object:
 
-```{r, error=TRUE}
-#sp::spTransform(c(98710.32800000161, 162573.7030000016), wgs_84)
+```{r proj_transf_fail, eval=FALSE, include=FALSE}
+sp::spTransform(c(98710.32800000161, 162573.7030000016), wgs_84)
 ```
 
 But after transformation of the single coordinate to a `SpatialPoints` object, the `spTransform` function can be used:
-```{r}
+```{r proj_transf_point}
 single_coordinate <- SpatialPoints(matrix(c(98710.32800000161, 
                                             162573.7030000016), 
                                           ncol = 2), 
@@ -183,8 +203,7 @@ spTransform(single_coordinate, wgs_84)
 ```
 
 The application is similar to other spatial objects, such as a `SpatialPointsDataFrame`:
-
-```{r}
+```{r proj_transf_df}
 pts_recorded_wgs84 <- spTransform(pts_recorded, wgs_84)
 pts_recorded_wgs84
 ```
@@ -205,42 +224,54 @@ The function will probably look more or less like this:<br><br>
         return(df)
 </div>
 
+```{r exercise2, include=FALSE}
+```
+
+Following test should be able to work with the `reproject_points` function:
+```{r proj_ex_test, message=FALSE}
+pts_ex2_test <- as.data.frame(pts_recorded)
+ex2_test <- reproject_points(pts_ex2_test, "longitude", "latitude",
+                             CRS("+init=epsg:31370"), 
+                             CRS("+init=epsg:4326"))
+head(ex2_test)
+```
+
 **Remark:** This function is part of an [`inbo-rutil` script,  ](https://github.com/inbo/inbo-rutils/blob/master/gis/guess_projection.R) to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coordinate reference systems.
 
 # Reading data: `rgdal`
 
 Mostly, the starting point of a data analysis involving spatial data is a data set in any kind of GIS format. The functionality to read **vector** data is provide by the `readOGR` function or the `rgdal` package:
 
-```{r}
-deelbekkens <- readOGR("../../data/deelbekkens/Deelbekken.shp")
+```{r read_shape}
+deelbekkens <- readOGR("../data/deelbekkens/Deelbekken.shp")
 ```
 
-```{r}
+```{r read_show_shape}
 deelbekkens
 ```
 
-```{r}
+```{r read_plot_object}
 plot(deelbekkens)
 ```
 
 Besides shapefiles, other vector data formats can be read as well. Certainly `geojson` is a increasingly used data format for feature (vector) data sets:
 
-```{r}
-eu_10grid <- readOGR("../../data/EUgrid10.geojson")
+```{r read_geojson}
+eu_10grid <- readOGR("../data/EUgrid10.geojson")
 ```
-```{r}
+```{r read_show_geojson}
 eu_10grid
 ```
 
 Actually, the set of data formats you can interact with, *does not depend on R*, but is dependent on your GDAL installation. To check if the installation supports a specific **vector** data format, you can get an overview of them by the `ogrDrivers()` command:
 
-```{r}
+```{r read_show_drivers}
 head(ogrDrivers()) # Just the first 6 records are shown here
 ```
 
 For data sets with multiple layers, the reading of a specific Layer is supported as well. For example, when the driver to read ESRI FileGeoDatabases is present, following commands will be useful as well:
 
-```{r, eval=FALSE}
+```{r read_gdb_example, eval=FALSE}
 # Information about the data (without actually reading the data itself)
 ogrInfo(dsn = "name_filegeodatabase.gdb") 
 # List the names of the layers in the dataset
@@ -255,14 +286,14 @@ readOGR(dsn = "name_filegeodatabase.gdb", layer = "layer_of_interest"
 
 Vector data represented as `Spatial***DataFrame` can be sub selected as a DataFrame. For example, selecting only the `deelbekkens` that are in the `Netebekken` (Boolean indexing):
 
-```{r}
+```{r man_subset}
 nete <- deelbekkens[deelbekkens$BEKNAAM == "Netebekken", ]
 plot(nete)
 ```
 
 The result of the selection is again a `SpatialPolygonsDataFrame`. When only interested in the data itself, the selection of the attribute data alone can be done by converting the data to a DataFrame. 
 
-```{r}
+```{r man_subset_show}
 head(as.data.frame(nete))
 ```
 
@@ -286,17 +317,17 @@ As most commands of rgeos start with g***, use the power of the TAB-button to ex
 
 These functions operate both on `Spatial*` objects (see above) as well as `Spatial***DataFrame` objects. Most of these functions speak for themselves (or read the manual). An important argument of these functions is `byid`. The `byid` argument determines if the function should be applied across sub geometries (`TRUE`) or the entire object (`FALSE`). Default is `FALSE`. For example, for the `area` calculation:
 
-```{r}
+```{r man_area}
 gArea(nete) # default is FALSE -> entire object
 ```
 versus
-```{r}
+```{r man_area_byid}
 gArea(nete, byid = TRUE)
 ```
 
 Comparison of geometries involves two geometries:
 
-```{r}
+```{r man_contains}
 vertical <- eu_10grid[grep('E400', eu_10grid$CellCode), ]
 horizontal <- eu_10grid[grep('N311', eu_10grid$CellCode), ]
 
@@ -307,7 +338,7 @@ true_ids <- as.data.frame(which(comparison, arr.ind = TRUE)) # Find the TRUE ele
 true_ids
 ```
 
-```{r}
+```{r man_contains_plot}
 # adjusting the colors transparency
 blue <- adjustcolor("blue", alpha.f = 0.3) 
 red <- adjustcolor("darkred", alpha.f = 0.3) 
@@ -328,6 +359,10 @@ Make a `leaflet` plot (with open street map background) of the `nete` sub catchm
 <b>Tip 2:</b> Remember that leaflet always expects WGS84 as CRS to make a plot(!)
 </div>
 
+The output should look like:
+```{r exercise3, echo=FALSE, eval=TRUE}
+```
+
 # Mapping vector data
 
 ## `ggplot`
@@ -336,26 +371,27 @@ When working with DataFrame data, the application of `ggplot2` is typical. Hence
 
 For `SpatialPointsDataFrame` this is not really an issue, as the `longitude` and `latitude` columns provide the geometry information and can be used as such in `ggplot` by directly converting the data to a `data.fram`
 
-```{r}
+```{r plot_point_df}
 pts_recorded_df <- as.data.frame(pts_recorded)
 pts_recorded_df
 ```
 
-```{r}
+```{r plot_point_plot}
 ggplot(pts_recorded_df, aes(x = longitude, y = latitude)) +
     geom_point() +
-    geom_text(size = 2, aes(label = scientific_names), 
-              check_overlap = TRUE, hjust = -0.1)
+    geom_text(size = 4, aes(label = scientific_names), 
+              check_overlap = TRUE, hjust = -0.1) +
+    xlim(150000, 300000)
 ```
 
 For `Lines` and `Polygons`, the translation requires an entire interpretation of the configuration towards a `data.frame`. This functionality is provided by `fortify`, which translates the **spatial** information:
 
-```{r, message=FALSE}
+```{r plot_df_geom, message=FALSE}
 nete_df <- fortify(nete)
 head(nete_df)
 ```
 
-```{r}
+```{r plot_df_geom_show}
 class(nete_df)
 ```
 
@@ -370,7 +406,7 @@ The individual columns of the resulting `data.frame` describe the following elem
 
 Still, the added value of using `ggplot2` is to use the attribute data to define colors,... As the attribute data table is available and we have an identifier `id`, we can JOIN the attribute data to the spatial information after retrieving the **attribute** data with the `as.data.frame` function:
 
-```{r}
+```{r plot_df_attr}
 nete_df <- merge(nete_df, as.data.frame(nete))
 head(nete_df)
 ```
@@ -389,11 +425,22 @@ This seems to be a useful small tooling for a custom R function...
 Write a function called `prepare_spatial_for_ggplot` that takes a `SpatialLinesDataFrame` or `SpatialPolygonsDataFrame` as input and execute the necessary steps (described above: `fortify`/`as.data.frame`/`merge`) to enable the plotting with `ggplot2`. The output of the function is a `data.frame`.
 </div>
 
+```{r exercise4, include=FALSE}
+```
+
+Following test should be able to work with the `prepare_spatial_for_ggplot` function:
+```{r plot_ex_test, message=FALSE}
+ex4_test <- prepare_spatial_for_ggplot(nete)
+head(ex4_test)
+```
+
+
+
 For plotting `Lines`, use the `ggplot` function `geom_path()` (and NOT `geom_line()`). For polygons, you can choose:
 * `geom_path()`: only plot the borders
 * `geom_polygon()`: usa a fill color for the polygons
 
-```{r}
+```{r plot_polygon_plot}
 ggplot(nete_df, aes(x = long, y = lat)) +
     geom_polygon(aes(group = group, fill = id)) +
     coord_fixed()
@@ -405,7 +452,7 @@ ggplot(nete_df, aes(x = long, y = lat)) +
 
 The `ggmap` package is the spatial plotting extension to `ggplot2`. It provides the ability to integrate the graphs of `ggplot2` with spatial backgrounds coming from online resources such as Google maps, [stamen maps](http://maps.stamen.com/#terrain/12/37.7706/-122.3782) and OpenStreetMap. The most convenient way to setup these background maps is to use the `ggmap::get_***` functions. For example, using the `toner-background` of stamen:
 
-```{r, message=FALSE}
+```{r plot_ggmap_toner, message=FALSE}
 extent <- c(left = 2.54, bottom = 49.46, right = 6.4, top = 51.51)
 map <- get_stamenmap(extent, zoom = 8, maptype = "toner-background")
 belgium <- ggmap(map)
@@ -414,7 +461,7 @@ belgium
 
 Just as with the OpenStreetMap integration of the `leaflet` package, these spatial background coming from online resources use `WGS84` (decimal degrees). Make sure to convert the vector data to the WGS84 `CRS`:
 
-```{r, message=FALSE}
+```{r plot_ggmap_toner_nete, message=FALSE}
 nete_wgs84 <- spTransform(nete, wgs_84)
 nete_df_wgs84 <- fortify(nete_wgs84)
 nete_df_wgs84 <- merge(nete_df_wgs84, as.data.frame(nete_wgs84))
@@ -426,7 +473,7 @@ belgium +
 
 The `bbox` can be defined more specifically to improve the boundaries of the background image. Focusing on the Nete catchment:
 
-```{r, message=FALSE}
+```{r plot_ggmap_toner_zoom, message=FALSE}
 extent <- c(left = 4.42, bottom = 50.9, right = 5.4, top = 51.4)
 map <- get_stamenmap(bbox = extent, zoom = 10, maptype = "toner-hybrid")
 ggmap(map) + 
@@ -437,7 +484,7 @@ ggmap(map) +
 **Remark:** each of these online providers have different `maptype` options. Check the help of these functions to see the options (e.g. `?get_stamenmap`).
 
 The usage of Google maps enables the option to provide a *google maps search* as center of the image
-```{r, message=FALSE}
+```{r plot_ggmap_google, message=FALSE}
 map <- get_googlemap(center = "Geel Belgium",  scale = 2, 
                      maptype = "terrain", zoom = 9)
 ggmap(map) +
@@ -446,3 +493,14 @@ ggmap(map) +
 ```
 
 The [Github repository](https://github.com/dkahle/ggmap) and [the paper](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) provide more introductionary material to get you started with `ggmap`. Another potentially useful plotting package is the [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html) package.
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+Pick **any spatial vector** data set (shapefile, geojson,...) currently on your computer:
+
+(1) `read` the file into R as a Spatial***DataFrame
+(2) make a subselection of the dataset using one of the data columns and a condition (e.g. `length  > 10000`)
+(3) create a `ggplot` with the color of each spatial entity defined by a chosen data columns
+</div>
+

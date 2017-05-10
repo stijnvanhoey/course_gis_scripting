@@ -1,21 +1,17 @@
 
-
 # SOLUTIONS
 
-##------------------------------------------------
-## 1. leaflet introduction
-##------------------------------------------------
-
+## @knitr exercise1
+# 1. leaflet introduction
 leaflet() %>%
     addTiles() %>%  # provide a default openstreetmap background layer to the image
     addMarkers(data = pts)  %>% # Add the points to the map
+    # Add the buffer polygons to the map with custom colors
     addPolygons(data = spTransform(pts_lambert_buffer, wgs_84),
-                fill = FALSE, color = "Red") # Add the buffer polygons to the map with custom colors
+                fill = FALSE, color = "Red")
 
-##------------------------------------------------
-## 2. point coordinate reprojection
-##------------------------------------------------
-
+## @knitr exercise2
+# 2. point coordinate reprojection
 #' reproject XY coordinates from dframe columns
 #'
 #' @param df data.frame with a x and y coordinate column
@@ -39,21 +35,16 @@ reproject_points <- function(df, col_long, col_lat,
     return(df)
 }
 
-##------------------------------------------------
-## 3. leaflet of Nete + centroid
-##------------------------------------------------
-
+## @knitr exercise3
+# 3. leaflet of Nete + centroid
 leaflet() %>%
     addTiles() %>%
     addPolygons(data = spTransform(nete, wgs_84), fill = FALSE) %>%
     addCircles(data = spTransform(gCentroid(nete, byid = TRUE), wgs_84),
                color = 'red')
 
-
-##-----------------------------------------------------------------------
-## 4. ggplot preparation of spatialLines- and spatial PolygonesDataFrames
-##-----------------------------------------------------------------------
-
+## @knitr exercise4
+# 4. ggplot preparation of spatialLines- and spatial PolygonesDataFrames
 #' Prepare a SpatialLinesDataFrame or SpatialPolygonsDataFrame for ggplot2
 #' plotting
 #'
