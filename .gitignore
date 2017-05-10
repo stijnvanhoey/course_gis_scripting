@@ -89,5 +89,7 @@ ENV/
 .ropeproject
 
 scratch/
+
 .Rproj.user
 .Rhistory
+*.Rproj
