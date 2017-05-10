@@ -7,7 +7,12 @@ output:
 
 # Setup
 
-Make sure your have `rgdal`, `rgeos`, `raster`, `ggmap` and `sp` installed:
+Make sure your have `rgdal`, `rgeos`, `raster`, `ggmap`, `leaflet` and `sp` installed:
+
+```{r, eval=FALSE, include=FALSE}
+install.packages(c("rgdal", "rgeos", "raster", "ggmap", "leaflet", "sp"))
+```
+
     
 ```{r, message=FALSE, warning=FALSE}
 library('rgdal')
@@ -17,6 +22,8 @@ library('rgeos')
 library('leaflet')
 library('ggmap')
 ```
+
+
 
 # Spatial data objects: `sp`
 
@@ -69,13 +76,7 @@ pts_lambert <- spTransform(pts, crs_lambert)
 showDefault(pts_lambert)
 ```
 
-Other (geometric) operations are provided by (a huge amount of) additional R Packages. The `rgeos` package is such an example:
-
-```{r}
-library(rgeos)
-```
-
-As an example: adding a buffer to our `SpatialPoints` object:
+Other (geometric) operations are provided by (a huge amount of) additional R Packages. The `rgeos` package is n important package to check for these functionalities. As an example: adding a buffer to our `SpatialPoints` object:
 ```{r}
 # gbuffer from the rgeos package (see later)
 pts_lambert_buffer <- gBuffer(pts_lambert, byid = TRUE, width = 2000) 
@@ -444,3 +445,4 @@ ggmap(map) +
           data = nete_df_wgs84, colour = "white")
 ```
 
+The [Github repository](https://github.com/dkahle/ggmap) and [the paper](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) provide more introductionary material to get you started with `ggmap`. Another potentially useful plotting package is the [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html) package.
