@@ -93,3 +93,5 @@ scratch/
 .Rproj.user
 .Rhistory
 *.Rproj
+*_cache/
+*_files/
