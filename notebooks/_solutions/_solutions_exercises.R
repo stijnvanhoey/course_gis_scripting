@@ -56,6 +56,24 @@ prepare_spatial_for_ggplot <- function(spatial_df){
     merge(df, as.data.frame(spatial_df))
 }
 
+## @knitr exercise5
+# 5. rasterize a set of irregular spaced points
+base_raster <- raster(xmn = 2.54, ymn = 49.46, xmx = 6.4, ymx = 51.51,
+                      resolution = c(0.1, 0.1))
+plot(rasterize(lonlat, base_raster, fun = function(x,...)length(x)))
 
+## @knitr exercise6
+# 6. Load an Arc/Info Binary Grid from file
+grnt_bodem <- raster("../data/grntbodem/")
+plot(grnt_bodem, col = bpy.colors(10))
 
+## @knitr exercise7
+# 7. Reclassify a raster file
+class_table <- read.csv('../data/systemtable_example.txt',
+                        sep = " ", header = FALSE)
+grnt_bodem_reclassified <- reclassify(grnt_bodem, class_table)
+plot(grnt_bodem_reclassified, breaks = c(0, 1, 2, 3),
+     col = c(rgb(229, 245, 249, max = 255),
+             rgb(153, 216, 201, max = 255),
+             rgb(44, 162, 95, max = 255)))
 
