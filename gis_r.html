@@ -166,9 +166,11 @@ Report bugs, typo's, suggestions... as issues: <a href="https://github.com/stijn
 
 ---
 
-# Afternoon R session
+# R session planning
 
-* TODO
+* Introduction to the ecosystem
+* Handson vector handling
+* Handson raster handling
 
 ---
 class: center, middle
@@ -179,7 +181,86 @@ class: center, middle
  
 ---
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-R_overview.png)
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-1.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-2.png)
+background-size: cover
+
+---
+class: center, middle
+
+![:scale 10%](./img/gdal_logo.png)
+
+[GDAL (Geospatial Data Abstraction Library)](http://www.gdal.org/) is the<br>
+open source Swiss Army knife<br> for raster and vector geospatial data formats.
+
+--
+
+<br><br><br><br>
+<small>Traditionally `GDAL` used to design the raster part of the library, and `OGR` the vector part for Simple Features. Starting with GDAL 2.0, both sides have been more integrated.<small>
+
+---
+
+## GDAL functions: CMD
+
+Available on the command line... with [documentation](http://gdal.org/1.11/gdalwarp.html)...<br>
+
+.center[
+![:scale 70%](./img/ogr2ogr_cmd.png)
+]
+<br><br>
+
+This [online cheat-sheet](https://github.com/dwtkns/gdal-cheat-sheet) is a great resource!
+
+---
+
+## GDAL functions: R
+
+* Import the GDAL library and use it within a script
+
+```R
+library(rgdal)
+gdal_rasterize(...
+
+```
+
+--
+
+* Write an R function to call a specific GDAL command with `system`
+
+```R
+# No library(rgdal) (!)
+system(paste('gdalinfo', filename))
+```
+
+--
+
+* Use the `gdal_cmd_builder` to call a specific GDAL command (package `gdalUtils`)
+
+```R
+gdal_cmd_builder('gdalinfo', parameter_variables,...)
+```
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-3.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-4.png)
+background-size: cover
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-5.png)
 background-size: cover
 
 ---
@@ -197,31 +278,80 @@ class: center, middle
 `02-gis-r-rasters.Rmd`
 
 ---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-5.png)
+background-size: cover
 
-# ArcPy and R - TODO
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-6.png)
+background-size: cover
 
- * https://r-arcgis.github.io/
+---
+background-color: #bfbfbf
 
- .center[
+# ArcPy and R
+
+.center[
+[Installation instructions](https://github.com/R-ArcGIS/r-bridge-install) (follow the [`README.md`](https://github.com/R-ArcGIS/r-bridge-install/blob/master/README.md))
+
 ![](./img/connect_r_arcgis.png)
+
+[Tutorials](https://r-arcgis.github.io/assets/arcgisbinding-vignette.html) and [examples](https://github.com/R-ArcGIS/r-sample-tools/tree/master/scripts)
 ]
  
 ---
 
-[Info](https://github.com/R-ArcGIS/r-bridge-install)
-and [here](https://r-arcgis.github.io/assets/arcgisbinding-vignette.html)
-![](./img/arcgis_r.png)
+# ArcPy and R
+
+Interaction with the R data types:
+
+* `arc.data2sp`
+
+* `arc.sp2data`
+
+* `arc.shape2sp`
+
 
 ---
 class: center, middle
 
 # QGis scripts in R
 
-QGis provides its own set of functionalities in the `processing` library. This can be accessed: access QGIS functionalities from R ([RQGIS](https://github.com/jannes-m/RQGIS)) versus run R functions in QGIS
+QGis provides its own set of functionalities in the `processing` library. This can be accessed: access QGIS functionalities from R ([RQGIS](https://github.com/jannes-m/RQGIS)) *vs* <br>run R functions in QGIS
 
 [`Demo` of the latter](http://amsantac.co/blog/en/2015/10/31/qgis-r.html)
 
 Check the information [here](https://docs.qgis.org/2.14/en/docs/training_manual/processing/r_intro.html) to write your own QGIS scripts.
+
+---
+count: false
+class: center, middle, bgheader
+background-image: url(img/StijnVH-ecosystem-gis-R_overview-7.png)
+background-size: cover
+
+---
+class:  middle
+
+The number 1 resource: [CRAN Task View: Analysis of Spatial Data](https://cran.r-project.org/web/views/Spatial.html)
+
+* [Great overview course](http://rspatial.org)
+* [Blog of the spatial tasgroup](http://r-spatial.org/)
+* [Cheat-sheet](http://www.maths.lancs.ac.uk/~rowlings/Teaching/UseR2012/cheatsheet.html)
+* ...
+
+---
+class: center, middle
+
+![:scale 100%](./img/rutils.png)
+
+---
+class: center, middle
+
+![:scale 100%](./img/r_tutorials.png)
+
 
 ---
 class: center, middle
