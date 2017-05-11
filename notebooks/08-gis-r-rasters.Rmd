@@ -344,7 +344,7 @@ plot(ndvi2)
 
 ## High-level functions
 
-Several *high level* functions (i.e. typical GIS software functions) have been implemented for `RasterLayer` objects. Examples are `contour()`, `focal()` (moving window), `clump()` (detect patches of connected cells), `zonal()` (zonal statistics), `terrain()` (slope, aspect and other terrain characteristics from dem),... See the help files for more detailed descriptions of each function. (also `calc` is actually a high level function).
+Several *high level* functions (i.e. typical GIS software functions) have been implemented for `RasterLayer` objects. Examples are `contour()`, `focal()` (moving window), `clump()` (detect patches of connected cells), `zonal()` (zonal statistics), `terrain()` (slope, aspect and other terrain characteristics from dem), `(dis)aggregate` (change resolution)... See the help files for more detailed descriptions of each function. (also `calc` is actually a high level function).
 
 <br><div class="alert alert-info">
 **Remember**: these functions work as well for raster data sets that cannot be loaded into memory!
