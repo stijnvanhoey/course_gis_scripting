@@ -17,7 +17,6 @@ Make sure your have `rgdal`, `rgeos`, `raster`, `ggmap`, `leaflet` and `sp` inst
 install.packages(c("rgdal", "rgeos", "raster", "ggmap", "leaflet", "sp"))
 ```
 
-    
 ```{r load, message=FALSE, warning=FALSE}
 library('rgdal')
 library('sp')
@@ -27,9 +26,7 @@ library('leaflet')
 library('ggmap')
 ```
 
-
-
-# Spatial data objects: `sp`
+# Spatial (vector) data objects: `sp`
 
 Package `sp` is the central package supporting spatial data analysis in R. `sp` defines a set of classes to represent spatial data. A class defines a particular data type. The `data.frame` is an example of a class. Any particular data.frame you create is an **object** (instance) of that class.
 
@@ -303,9 +300,30 @@ Hence, the geometry and projection data is no longer contained, only the data it
 
 ## `sp` overlay and aggregations
 
-# TODODODODO
+The `sp` package provides mostly the data types. However, the `spTransform` function is an essential function provided by the package itself. Two other functions of the `sp` package are worth mentioning:
+*  `disaggregate`: groups of `Line` or `Polygon` (multi) are disaggregated to one `Line`/`Polygon` for each feature. When applied to the `deelbekkens` data set:
 
-Use over for queries between Spatial* objects
+```{r sp_disaggreg}
+length(deelbekkens)
+deelbekkens_disaggr <- disaggregate(deelbekkens)
+length(deelbekkens_disaggr)
+```
+The number of features increases, as each polygon in the data set is now defined as an individual feature of the data set.
+
+* `over(x, y)` is used for spatial JOINs 
+
+```{r over_join}
+ids <- over(spTransform(eu_10grid, wgs_lambert), pts_recorded)
+ids <- na.omit(ids)
+ids
+```
+The result provides the indices of the `SpatialPolygonDataFrame` together with the `SpatialPointDataFrame` data entries.
+
+**Remark** `Lines`, and `Polygon`-`Polygon` overlays require `rgeos`
+
+<br><div class="alert alert-info">
+Check the vignette (`vignette('over')` in console) to get more details about all the different spatial JOIN options.
+</div>
 
 ## `rgeos` geometry operations
 
