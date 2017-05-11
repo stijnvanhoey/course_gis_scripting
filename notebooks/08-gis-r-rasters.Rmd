@@ -1,0 +1,392 @@
+---
+title: "GIS R rasters"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r setup, echo=FALSE, cache=FALSE}
+knitr::read_chunk('./_solutions/_solutions_exercises.R')
+```
+
+# Setup
+
+Make sure your have `rgdal` and `raster` installed:
+
+```{r install, eval=FALSE, include=FALSE}
+install.packages(c("rgdal", "raster"))
+```
+
+```{r load, message=FALSE, warning=FALSE}
+library('raster')
+library('rgdal')
+```
+
+# Raster data objects: `raster`
+
+The `sp` package supports raster (grid) data with the `SpatialGridDataFrame` and `SpatialPixelsDataFrame` classes. However, the `raster` package provides more specialized functionalities to raster data. Similar to the `sp` package, the `raster` package provides a number of classes and a number of functionalities to operate and interact with these classes. The `RasterLayer`, `RasterStack` and `RasterBrick` classes are the most important. 
+
+Whereas `sp` mainly focuses on the classes itself, the `raster` package has functions for creating, reading, manipulating, and writing raster data. The package provides, among other things, general raster data manipulation functions that can easily be used to develop more specific functions. 
+
+<br><div class="alert alert-info">
+Remember that, when required, the conversion from `Spatial***` raster representations to the `raster` package raster representations is just a single command `raster(sp_raster_variable_name)` away.
+</div>
+
+# Raster representations
+
+A 2D matrix is actually also a representation of a GIS raster, as it provides 
+the possibility to do element-wise calculations:
+
+```{r matrix_example}
+example_matrix <- matrix(1:6, nrow = 2, ncol = 3)
+example_matrix
+```
+
+Hence, a reclassification of the raster data can be achieved as follows:
+
+```{r matrix_reclassify}
+example_matrix[example_matrix >= 3]  <- 3.
+example_matrix[example_matrix < 3]  <- 0.
+example_matrix
+```
+
+However, for GIS raster representations, the classes provided by the `raster` package provide these type of operations while having the spatial `extent` and the `projection` integrated as well.
+
+## `RasterLayer`
+
+A `RasterLayer` object represents **single-layer** (variable) raster data. A `RasterLayer` object always stores a number of fundamental parameters that describe it:
+
+* the number of columns and rows (resolution)
+* the spatial `extent` (cfr. `bbox`)
+* the Coordinate Reference System (CRS)
+
+To create a `RasterLayer` manually, provide the required minimal information:
+```{r layer_create_1}
+# specify the RasterLayer with the following parameters:
+# - minimum x coordinate (left border)
+# - minimum y coordinate (bottom border)
+# - maximum x coordinate (right border)
+# - maximum y coordinate (top border)
+# - resolution (cell size) in each dimension
+r_example <- raster(xmn = 4.42, ymn = 50.9, xmx = 5.4, ymx = 51.4, 
+            resolution = c(0.1, 0.1))
+r_example
+```
+
+From the output we learn that with the default parameters, the CRS is defined here in degrees. However, when it would not make sense, the CRS is default put to `NA`:
+
+```{r raster_example_2}
+raster(ncol = 36, nrow = 18, xmn = -1000, xmx = 1000, ymn = -100, ymx = 900)
+```
+
+Consider the example `r_example` defined in degrees and extract some additional information:
+
+```{r layer_example_class}
+class(r_example)
+```
+Indeed, we created a single layer raster layer... 
+
+```{r layer_example_res}
+res(r_example)
+```
+with a resolution of 0.1 degrees, which we can change:
+
+```{r layer_example_res_adapt}
+res(r_example) <- 0.05
+r_example
+```
+
+However, the data currently only defines the skeleton of a raster data set. That is, it knows about its location, resolution, etc., but there are no values associated with it:
+
+```{r layer_example_values_test}
+hasValues(r_example)
+```
+Let's provide some random numbers from a uniform distribution:
+
+```{r layer_example_values}
+r_example <- setValues(r_example, runif(200, min = 1., max = 10.))
+r_example
+```
+
+```{r layer_example_plot}
+plot(r_example)
+```
+
+These `values` can be `sliced`, just as we would do with vectors and matrices:
+
+```{r layer_example_slice}
+values(r_example)[1:10]
+```
+
+An important feature of the `raster` package is the option to work `inMemory` or not:
+```{r layer_example_memory}
+inMemory(r_example)
+```
+
+This defines the data itself is stored in the working memory of your computer. For manually created `RasterLayers`, the data will be in memory. However, when accessing data from files, `raster` support data access without actually loading all the data in memory.
+
+<br><div class="alert alert-info">
+Remember that `RasterLayer` objects can be created from scratch, a file, an Extent object, a matrix, an 'image' object, or from a `Raster*`, `Spatial***`,... object
+</div>
+
+A useful functionality is the conversion between XYZ columns spatial data representation and a raster representation for points **on a regular grid**: 
+```{r layer_raster_to_xyz}
+xyz_example <- rasterToPoints(r_example)
+head(xyz_example)
+```
+
+```{r layer_xyz_to_raster, message=FALSE, warning=FALSE}
+plot(rasterFromXYZ(xyz_example))
+```
+
+However, in many occasions these XYZ combination are not provided on a regular grid. See the `rasterize` function for points that are **not on a regular grid**. An example of points that are not on a regular grid:
+
+```{r raster_irregular_grid}
+longitude <- c(4.4543, 5.02789, 4.94202, 4.49238, 4.49054, 4.54044, 5.95192, 
+               4.49496, 4.4958, 5.68327, 4.49054, 4.49054, 4.4958, 4.48938)
+latitude <- c(51.33847, 51.24824, 51.24325, 51.26218, 51.25701, 51.27518, 
+              51.30803, 51.25803, 51.26106, 51.04185, 51.25701, 51.25701, 
+              51.26106, 51.25955)
+lonlat <- cbind(longitude, latitude)
+head(lonlat)
+```
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+Check the documentation of the `rasterize` command provided by the `raster` package and convert the `lonlat` set of irregular points to a regular grid with a resolution of 0.1 degrees and an appropriate spatial `extent` (e.g. Belgium). Make sure that the resulting raster values represent the number of points per grid cell. Make plot of the resulting raster.
+</div>
+
+The output should look like:
+```{r exercise5, echo=FALSE, eval=TRUE}
+```
+
+## `RasterStack` and `RasterBrick`
+
+Single layer raster objects are very common. Still, a collection of rasters with the same spatial extent and resolution is a common case when doing spatial analysis (combining rasters with representing each a variable). In fact, a `RasterStack`/`RasterBrick` is a collection of `RasterLayer` objects with the same spatial extent and resolution.
+
+The main difference between `RasterStack` and `RasterBrick` is that a `RasterStack` is a loose collection of `RasterLayer` objects that can refer to **different files** (but must all have the same extent and resolution), whereas a `RasterBrick` can only point to a **single file**. A typical example of a `RasterBrick` object is the representation of a multi-band satellite image.
+
+As an example, create a dummy `RasterStack` with 3 alternatives of the `r_example` bundled together:
+```{r stack_example}
+s_example <- stack(r_example, r_example**2, r_example/2.)
+plot(s_example)
+```
+
+When checking the properties
+```{r stack_example_print}
+s_example
+```
+Make sure you notice the additional `dimension` in the description (`nlayers`).
+
+## Projection
+
+To transform a `RasterLayer` to another CRS you can use the function `projectRaster`. However, whereas the transformation of coordinates (vector formats) is rather trivial, the re-projection of a raster representation can result in a **loss of precision** and estimates for the values of new cells must be made based on the values in the old cells. If the values are class data, the *nearest neighbor* is commonly used. Otherwise some sort of interpolation (e.g. *bilinear*) is required. 
+
+An introduction to the `CRS` class definition to specify the coordinate reference system is provided in the `07-gis-r-vectors.Rmd` notebook. The definition of the `CRS` object is completely similar:
+
+```{r proj_lambert}
+crs_lambert <- CRS("+init=epsg:31370") 
+```
+
+Using the CRS, the re-projection with the `projectRaster`:
+```{r proj_default, message=FALSE, warning=FALSE}
+r_reproject <- projectRaster(r_example, crs = crs_lambert)
+r_reproject
+```
+However, using the default parameters, we do not have control on the spatial resolution (dimensions) of the resulting reprojected raster. Setting the resolution provides more control:
+
+```{r proj_res, message=FALSE, warning=FALSE}
+r_reproject <- projectRaster(r_example, crs = crs_lambert, 
+                             res = 5000)
+r_reproject
+```
+
+But is generally advised to project a raster to another `raster` object. By providing an existing `RasterLayer` object, your newly projected data perfectly aligns with it.
+
+```{r proj_base, message=FALSE, warning=FALSE}
+# Create a base_layer to project data to
+base_raster <- raster(ncol = 20, nrow = 10, 
+                      xmn = 153566.1, xmx = 223869.7, 
+                      ymn = 176630, ymx = 232773.3)
+crs(base_raster) <- crs_lambert
+# reproject to the new raster
+r_reproject <- projectRaster(r_example, base_raster)
+plot(r_reproject)
+```
+
+**Remark:** The function `projectExtent` is a great utility to only project the `extent` of the data and retrieve similar boundaries in the new CRS.
+
+# Reading data: `rgdal` or `raster`
+
+*First unzip the `.tif` example data in the data file to the scratch folder*:
+```{r unzip_tif}
+unzip('../data/NE1_50m_SR.zip', exdir = "../scratch")
+```
+
+Note that in most cases where real data is analyzed, these `raster*` objects are created from a file. The functionality to read **raster** data is provided by the `readGDAL` function of the `rgdal` package:
+
+```{r read_shape, cache=TRUE}
+r_data = readGDAL("../scratch/NE1_50M_SR/NE1_50M_SR.tif")
+class(r_data)
+```
+which results in a `SpatialGridDataFrame`. 
+
+Actually, the set of data formats you can interact with, *does not depend on R*, but is dependent on your GDAL installation. To check if the installation supports a specific **raster** data format, you can get an overview of them by the `gdalDrivers()` command:
+
+```{r read_show_drivers}
+head(gdalDrivers()) # Just the first 6 records are shown here
+```
+
+Still, the `raster` command of the `raster` package can also directly read raster files in several formats, also relying on the `rgdal` package (and the underlying **GDAL** driver) behind the scenes.
+
+Let's check the space this `SpatialGridDataFrame` requires in memory:
+```{r read_sp_size}
+print(object.size(r_data) , units = "auto")
+```
+
+and converting to a `RasterLayer` with the `raster` command:
+```{r read_sp_to_raster}
+r_data <- raster(r_data)
+class(r_data)
+```
+Let's check again the space this requires in memory after conversion to a `raster` object:
+```{r read_raster_size}
+print(object.size(r_data) , units = "auto")
+```
+Hence, for this type of raster GIS data, the `raster` representation is less memory demanding. Moreover, when reading these files directly with the `raster` command, the package will not load the data values in memory, while extracting the spatial information (extent, crs, dimensions):
+
+```{r read_raster_nomemory}
+r_data_raster <- raster("../scratch/NE1_50M_SR/NE1_50M_SR.tif")
+r_data_raster
+inMemory(r_data_raster)
+```
+
+In the case of multi-layer files, the `raster` function reads by default the first layer only. For multi-layer objects (e.g. multi-layer `GeoTIFF`), the `brick` or `stack` functions can be used to read data from file:
+
+```{r read_brick_nomemory}
+landstat_example <- brick('../data/LE71700552001036SGS00_SR_Gewata_INT1U.tif')
+landstat_example
+```
+```{r read_brick_plot}
+plot(landstat_example)
+```
+(Overview about the landstat bands/layers wavelengths is given [here](https://landsat.gsfc.nasa.gov/landsat-8/landsat-8-overview/) )
+
+**Remark: ** Most formats supported for reading can also be written to. This is supported by both `writeGDAL` (`rgdal` package) and `writeRaster` (`raster` package). Furthermore, for large rasters, the `writeValues` function is useful as well, as it supports writing the data in chunks. 
+<br><div class="alert alert-info">
+For reading in raster file data, try with the `raster` command first. If this is not successful, check if the `readGDAL` function can read it.
+</div>
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+In the `data` folder, an `Arc/Info Binary Grid` is provided, called `grnt_bodem`. read in the data with the variable-name `grnt_bodem` and make a plot using the `bpy.colors` color scale.
+</div>
+
+The output should look like:
+```{r exercise6, echo=FALSE, eval=TRUE}
+```
+(*In the case your GDAL driver does not support Arc/Info Binary Grid, read in the `grote_nete_bodem.tif` file in the data folder*)
+
+# Raster data manipulation
+
+## Raster algebra
+
+Many generic functions that allow for simple and elegant raster algebra have been implemented for `Raster*` objects, including the normal algebraic operators such as `{}`, logical operators such as `>`, `>=`, `<`, `==`, `!` and functions like `abs`, `round`, `ceiling`, `floor`, `trunc`, `sqrt`, `log`, `log10`, `exp`, `cos`, `sin`, `atan`, `tan`, `max`, `min`, `range`, `prod`, `sum`, `any`, `all`. In these functions you can mix raster objects with numbers, as long as the first argument is a raster object.
+
+```{r man_algebra}
+plot(sqrt(r_example + 10)/2, 
+     col = heat.colors(20))
+```
+
+Again, also `boolean indexing` (conditional replacement) is provided, which supports the reclassification of a raster data set:
+
+```{r man_boolean_ind}
+r_example[r_example >= 3]  <- 3.
+r_example[r_example < 3]  <- 0.
+plot(r_example)
+```
+
+**Remark:** The `reclassify` function provides the same functionality, but as a higher level function. For larger reclassify operations (many classes), the application of `reclassify` is worthwhile to use.
+
+<br><div class="alert alert-success">
+<b>EXERCISE</b>
+
+In the `data` folder, a text file `systemtable_example.txt` is available containing the information of a reclassification of the `grnt_bodem` variable. Read the text-file as a `data.frame` and save the content as variable `class_table`. Use the `class_table` to `reclassify` the `grnt_bodem` raster. Plot the output with any colors you would like to use.
+</div>
+
+The output could look like (depends on your color preferences):
+```{r exercise7, echo=FALSE, eval=TRUE}
+```
+
+**Remark:** To decide about the color you could use for maps, the [colorbrewer website](http://colorbrewer2.org) is a great start. You can copy/paste the color codes from the website itself, but the package `scales` provides the `brewer_pal` function, providing direct load of the colors as a colormap:
+```
+plot(grnt_bodem_reclassified, breaks = c(0, 1, 2, 3), 
+     col = scales::brewer_pal(palette = "Greens")(3))
+```
+
+To perform calculations between the individual layers of a `RasterBrick` or `RasterStack`, the  expression should refer to the individual layers of the object. Referring to individual layers in a `RasterBrick` or `RasterStack` object is done by using double square brackets `[[]]`. As an example, the calculation of the [NDVI](https://nl.wikipedia.org/wiki/Normalized_Difference_Vegetation_Index):
+
+$$NDVI = \frac{NIR - Red}{NIR + Red}$$
+
+```{r ndvi_calc_memory}
+ndvi <- (landstat_example[[4]] - landstat_example[[3]]) / (landstat_example[[4]] + landstat_example[[3]])
+plot(ndvi)
+```
+
+Although this is a quick way to perform the calculation, directly adding, subtracting, multiplying, etc, the layers of big raster objects is **not recommended**. When working with big objects, it is advisable to use the `calc()` function to perform these types of calculations. The reason is that R needs to load **all the data first into its internal memory** before performing the calculation and then runs everything in one block. It is really easy to run out of memory when doing that. A big advantage of the `calc()` function is that it has a built-in block processing option for any vectorized function, allowing such calculations to be fully "RAM friendly". The example below illustrates how to calculate NDVI from the same date set using the calc() function.
+
+```{r ndvi_calc_outmemory}
+## Define the function to calculate NDVI from 
+ndvi.calc <- function(x) {
+    ndvi <- (x[[4]] - x[[3]]) / (x[[4]] + x[[3]])
+    return(ndvi)
+}
+ndvi2 <- calc(x = landstat_example, fun = ndvi.calc)
+plot(ndvi2)
+```
+
+## High-level functions
+
+Several *high level* functions (i.e. typical GIS software functions) have been implemented for `RasterLayer` objects. Examples are `contour()`, `focal()` (moving window), `clump()` (detect patches of connected cells), `zonal()` (zonal statistics), `terrain()` (slope, aspect and other terrain characteristics from dem), `(dis)aggregate` (change resolution)... See the help files for more detailed descriptions of each function. (also `calc` is actually a high level function).
+
+<br><div class="alert alert-info">
+**Remember**: these functions work as well for raster data sets that cannot be loaded into memory!
+</div>
+
+As an example, converting the `grnt_bodem` raster to a binary mask with 0/1 values can be achieved by the `clump` function:
+```{r man_clump, message=FALSE, warning=FALSE}
+plot(clump(grnt_bodem), col = c("darkgreen"))
+```
+
+Another GIS function worthwhile to mention, is the **clipping if a raster with a vector layer**, which is provided by the function `mask`:
+
+```{r read_deelbekkens_shape}
+library(rgdal)
+deelbekkens <- readOGR("../data/deelbekkens/Deelbekken.shp")
+```
+
+```{r clip_mask}
+crs_wgs84 <- CRS("+init=epsg:4326") 
+deelbekkens_wgs84 <- spTransform(deelbekkens, crs_wgs84)
+r_data_crop <- crop(r_data, deelbekkens_wgs84)
+r_data_mask <- mask(r_data_crop, deelbekkens_wgs84)
+plot(r_data_mask)
+```
+**Remark:** The `gdalwarp` functionality to crop a vector file can also be executed directly with GDAL from the command line. As such, similar to the `subprocess` trick in Python (`05-the-power-of-gdal.ipynb`) to run a GDAL command within Python as if it would be on the command line, this can be achieved by using `system()` (instead of `subprocess`).
+
+# Mapping raster data
+
+Actually, the `plot` function provided by the `raster` package (find specific help by executing `?raster::plot` in the console) provides a lot of functionality. Also other plot functions from the system R will work on the `Raster*` objects:
+
+```{r plot_hist}
+hist(r_example)
+```
+
+For multi-band files, the `plotRGB` provides the option to plot *false color composites*:
+```{r read_brick_rgb}
+plotRGB(landstat_example, r = 5, g = 4, b = 3)
+```
+
+Another interesting package, is the [rasterVis](https://oscarperpinan.github.io/rastervis/) package. The package provides a set of methods for enhanced visualization and interaction. Specifically the space-time plots are well designed.
