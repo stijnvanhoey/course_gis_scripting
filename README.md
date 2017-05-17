@@ -18,15 +18,26 @@ The course can be split up in three main sections:
   * [07-gis-r-vectors.Rmd](./notebooks/07-gis-r-vectors.Rmd)
   * [08-gis-r-rasters.Rmd](./notebooks/08-gis-r-rasters.Rmd)
 
-The course notes are available in the [notebook](./notebooks) folder. For the Python sections, Jupyter notebook is used, while the R course material is available as Rmarkdown notebook files. The individual presentations in the [docs](./docs) folder can be used as guiding presentations to explain the setup and flow of the course. Specific focus is given to the interaction of both languages to the OSGEO libraries (proj.4, geos and gdal).
+The course notes for the hands-on sessions are available in the [notebook](./notebooks) folder. For the Python sections, Jupyter notebook is used, while the R course material is available as Rmarkdown notebook files. The individual presentations in the [docs](./docs) folder can be used as guiding presentations to explain the setup and flow of the course. Specific focus is given to the interaction of both languages to the OSGEO libraries (proj.4, geos and gdal). 
 
 ## Running the course material
 
 ### Python
-By installing the Anaconda or Miniconda packaging environment, the required environment can be setup using the `environment.yml` file.
+By installing the [Anaconda](https://www.continuum.io/downloads) or [Miniconda](https://conda.io/miniconda.html) Python packaging environment, the required environment can be setup using the `environment.yml` file. To setup the environment, use the [Anaconda navigator tutorial](https://docs.continuum.io/anaconda/navigator/tutorials/manage-environments#importing-an-environment) or define the environment with the command line:
+
+```bash
+conda env create -f environment.yml
+```
+After activation of the environment (select the environment in Anaconda Navigator,  `activate gispython` (windows cmd) or `source activate gispython` (linux terminal)), start Jupyter notebooks to work on the Python notebooks. Startgin Jupyter notebook can be done directly from the Anaconda Navigator by command line:
+
+```bash
+jupyter notebook
+```
+
+**Remark:** If the usage of the environment file does not work, setup your own environment or install the most essential packages in your current working environment using conda: `conda install pandas numpy geopandas rasterio mplleaflet`. This will support most of the course material.
 
 ### R
-The easiest way to start working on the Rmarkdown files is by using Rstudio. By running the first cells of the [07-gis-r-vectors.Rmd](./notebooks/07-gis-r-vectors.Rmd) notebook, the required dependencies are installed. 
+The easiest way to start working on the Rmarkdown files is by using [Rstudio](https://www.rstudio.com/) as this IDE fully supports the Rmarkdown format. By running the first cells of the [07-gis-r-vectors.Rmd](./notebooks/07-gis-r-vectors.Rmd) notebook, the required dependencies will be installed. 
 
 ## Acknowledgements
 These course notes are translated from some interesting sources:
