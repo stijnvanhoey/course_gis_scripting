@@ -40,7 +40,12 @@ jupyter notebook
 The easiest way to start working on the Rmarkdown files is by using [Rstudio](https://www.rstudio.com/) as this IDE fully supports the Rmarkdown format. By running the first cells of the [07-gis-r-vectors.Rmd](./notebooks/07-gis-r-vectors.Rmd) notebook, the required dependencies will be installed. 
 
 ## Acknowledgements
-These course notes are translated from some interesting sources:
-* Excellent introduction by `kjordahl` at the  [EuroScipy 2013](http://kjordahl.github.io/SciPy2013) and  [EuroScipy 2015](http://kjordahl.github.io/SciPy-Tutorial-2015) conferences
-* Extended and great [R-GIS introduction](http://rspatial.org/index.html)
-* Internal INBO course material provided by [Thierry Onkelinx]()
+These course notes are highly inspired by some interesting other sources:
+* Excellent *Using Geospatial Data With Python*  at the  [Scipy 2013](http://kjordahl.github.io/SciPy2013) conference and *Geospatial Data with Open Source Tools in Python* at the  [Scipy 2015](http://kjordahl.github.io/SciPy-Tutorial-2015) conference by [`kjordahl`](https://github.com/kjordahl).
+* Extended and great [R-GIS introduction](http://rspatial.org/index.html) by [Robert Hjimans](http://biogeo.ucdavis.edu/people.html#robert-hjimans)
+* Nice *Introduction to Spatial Data Types in R* [notes](https://rstudio-pubs-static.s3.amazonaws.com/172289_67a42eebbd574197b6bb15d1ef6cfe97.html) by [Claudia Engel](https://github.com/cengel?tab=repositories)
+* [Geoscripting course](https://geoscripting-wur.github.io/) by Wageningen University
+* Internal INBO course material provided by [Thierry Onkelinx](https://github.com/ThierryO)
+* The [Python GDAL/OGR cookbook](https://pcjericks.github.io/py-gdalogr-cookbook/index.html) by [Jared Erickson](https://github.com/pcjericks)
+* The [Automating GIS processes course](https://automating-gis-processes.github.io/2016/) by [Henrikki Tenkanen]()
+* Package/libraries documentation of the used packages/libraries
