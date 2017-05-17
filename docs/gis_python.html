@@ -3,7 +3,7 @@
   <head>
     <title>Introduction to GIS scripting</title>
     <meta charset="utf-8">
-      <link rel="stylesheet" type="text/css" href="img/slides.css">
+      <link rel="stylesheet" type="text/css" href="../img/slides.css">
 <!--    <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
       @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
@@ -103,43 +103,43 @@ class: center, middle
  
 ---
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-1.png)
+background-image: url(../img/StijnVH-ecosystem-gis-1.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-2.png)
+background-image: url(../img/StijnVH-ecosystem-gis-2.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-3.png)
+background-image: url(../img/StijnVH-ecosystem-gis-3.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-4.png)
+background-image: url(../img/StijnVH-ecosystem-gis-4.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-5.png)
+background-image: url(../img/StijnVH-ecosystem-gis-5.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-14.png)
+background-image: url(../img/StijnVH-ecosystem-gis-14.png)
 background-size: cover
 
 ---
 class: center, middle
 
-![:scale 10%](./img/gdal_logo.png)
+![:scale 10%](../img/gdal_logo.png)
 
 [GDAL (Geospatial Data Abstraction Library)](http://www.gdal.org/) is the<br>
 open source Swiss Army knife<br> for raster and vector geospatial data formats.
@@ -176,7 +176,7 @@ print(drv.GetMetadataItem('DMD_LONGNAME'))
 --
 
 .center[
-![:scale 80%](./img/monty_python.jpg)
+![:scale 80%](../img/monty_python.jpg)
 ]
 
 ---
@@ -220,7 +220,7 @@ Shapely can perform:
 
 `difference`, `intersection`, `union`,...
 .center[
-![:scale 80%](./img/shapely_intersection.png)
+![:scale 80%](../img/shapely_intersection.png)
 ]
 
 
@@ -273,7 +273,7 @@ class: center, middle
 Available on the command line... with [documentation](http://gdal.org/1.11/gdalwarp.html)...<br>
 
 .center[
-![:scale 70%](./img/ogr2ogr_cmd.png)
+![:scale 70%](../img/ogr2ogr_cmd.png)
 ]
 <br><br>
 
@@ -285,7 +285,7 @@ This [online cheat-sheet](https://github.com/dwtkns/gdal-cheat-sheet) is a great
 
 * Add [gdaltools plugin](https://docs.qgis.org/2.2/en/docs/user_manual/plugins/plugins_gdaltools.html) to QGis
 .center[
-![:scale 70%](./img/gdaltools.png)
+![:scale 70%](../img/gdaltools.png)
 ]
 
 ---
@@ -295,7 +295,7 @@ This [online cheat-sheet](https://github.com/dwtkns/gdal-cheat-sheet) is a great
 * Build the command using the interface and copy paste your command for later usage...
 
 .center[
-![:scale 70%](./img/gdaltools_cmd.png)
+![:scale 70%](../img/gdaltools_cmd.png)
 ]
 
 ---
@@ -344,7 +344,7 @@ imshow(img, cmap='gray')
 ```
 
 .center[
-![:scale 80%](./img/manhattan_band_1.png)
+![:scale 80%](../img/manhattan_band_1.png)
 ]
 
 ---
@@ -354,7 +354,7 @@ imshow(img, cmap='gray')
 Using GeoPandas to generate a vector mask and applying it to a raster image with rasterio ([example](https://github.com/kjordahl/SciPy-Tutorial-2015/blob/master/examples/rasterio_mask.py)).
 
 .center[
-![:scale 100%](./img/rasterize_mask.png)
+![:scale 100%](../img/rasterize_mask.png)
 ]
 
 ---
@@ -369,7 +369,7 @@ mask = rasterize([poly], transform=src.transform, out_shape=src.shape)
 ```
 
 .center[
-![:scale 75%](./img/mask.png)
+![:scale 75%](../img/mask.png)
 ]
 
 ---
@@ -385,37 +385,37 @@ class: center, middle
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-6.png)
+background-image: url(../img/StijnVH-ecosystem-gis-6.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-7.png)
+background-image: url(../img/StijnVH-ecosystem-gis-7.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-8.png)
+background-image: url(../img/StijnVH-ecosystem-gis-8.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-9.png)
+background-image: url(../img/StijnVH-ecosystem-gis-9.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-10.png)
+background-image: url(../img/StijnVH-ecosystem-gis-10.png)
 background-size: cover
 
 ---
 count: false
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-11.png)
+background-image: url(../img/StijnVH-ecosystem-gis-11.png)
 background-size: cover
 
 ---
@@ -460,25 +460,25 @@ class: center, middle
 ---
 class: center, middle
 
-![:scale 100%](./img/qgis_demo1.png)
+![:scale 100%](../img/qgis_demo1.png)
 
 ---
 count: false
 class: center, middle
 
-![:scale 100%](./img/qgis_demo2.png)
+![:scale 100%](../img/qgis_demo2.png)
 
 ---
 count: false
 class: center, middle
 
-![:scale 100%](./img/qgis_demo3.png)
+![:scale 100%](../img/qgis_demo3.png)
 
 ---
 count: false
 class: center, middle
 
-![:scale 100%](./img/qgis_demo4.png)
+![:scale 100%](../img/qgis_demo4.png)
 
 ---
 class: center, middle
@@ -491,12 +491,12 @@ Check the information [here](https://docs.qgis.org/2.8/en/docs/user_manual/proce
 
 ---
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-11.png)
+background-image: url(../img/StijnVH-ecosystem-gis-11.png)
 background-size: cover
 
 ---
 class: center, middle, bgheader
-background-image: url(img/StijnVH-ecosystem-gis-11_alpha.png)
+background-image: url(../img/StijnVH-ecosystem-gis-11_alpha.png)
 background-size: cover
 
 <div class="alert alert-success">
@@ -508,7 +508,7 @@ class: center, middle
 
 ... and help each other!
 
-![:scale 100%](./img/pyutils.png)
+![:scale 100%](../img/pyutils.png)
 
 ---
 class: center, middle
@@ -521,7 +521,7 @@ class: center, middle
     </textarea>
 <!--    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
 </script>-->
-    <script src="img/remark.min.js" type="text/javascript">
+    <script src="../img/remark.min.js" type="text/javascript">
     </script>
     <script>
       var slideshow = remark.create();
