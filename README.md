@@ -18,7 +18,7 @@ The course can be split up in three main sections:
   * [07-gis-r-vectors.Rmd](./notebooks/07-gis-r-vectors.Rmd)
   * [08-gis-r-rasters.Rmd](./notebooks/08-gis-r-rasters.Rmd)
 
-The course notes for the hands-on sessions are available in the [notebook](./notebooks) folder. For the Python sections, Jupyter notebook is used, while the R course material is available as Rmarkdown notebook files. The individual presentations in the [docs](./docs) folder can be used as guiding presentations to explain the setup and flow of the course. Specific focus is given to the interaction of both languages to the OSGEO libraries (proj.4, geos and gdal). 
+The course notes for the hands-on sessions are available in the [notebook](./notebooks) folder. For the Python sections, Jupyter notebook is used, while the R course material is available as Rmarkdown notebook files. Check the [Github page](https://stijnvanhoey.github.io/course_gis_scripting/#1) for the slides. The individual presentations (stored in the [docs](./docs) folder) can be used as guiding presentations to explain the setup and flow of the course. Specific focus is given to the interaction of both languages to the OSGEO libraries (proj.4, geos and gdal), which has been illustrated hands-on o the command line during the course.
 
 ## Running the course material
 
