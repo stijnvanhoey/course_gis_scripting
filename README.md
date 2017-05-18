@@ -23,6 +23,9 @@ The course notes for the hands-on sessions are available in the [notebook](./not
 ## Running the course material
 
 ### Python
+
+The Jupyterhub infrastructure described in the [setup of the Python-slideshow](https://stijnvanhoey.github.io/course_gis_scripting/python_intro.html#3) has been setup and running for the course sessions itself. Hence, it is not available as a continues service. Still, the environment can be setup locally as well, as discussed below.
+
 By installing the [Anaconda](https://www.continuum.io/downloads) or [Miniconda](https://conda.io/miniconda.html) Python packaging environment, the required environment can be setup using the `environment.yml` file. To setup the environment, use the [Anaconda navigator tutorial](https://docs.continuum.io/anaconda/navigator/tutorials/manage-environments#importing-an-environment) or define the environment with the command line:
 
 ```bash
