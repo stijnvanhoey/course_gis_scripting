@@ -1,8 +1,14 @@
 ---
 title: "GIS R vectors"
+author:
+- Stijn Van Hoey
 output:
-  html_notebook: default
-  html_document: default
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    fig_caption: false
 ---
 
 ```{r setup, echo=FALSE, cache=FALSE}
@@ -67,7 +73,12 @@ showDefault(pts)
 
 Hence, the projection information is provided and our geometry is aware of the spatial context. 
 
-**Remark**: Assigning a CRS is like labeling something. You need to provide the label that corresponds to the item. Not to what you would like it to be. The latter requires a transformation.
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
+
+Assigning a CRS is like labeling something. You need to provide the label that corresponds to the item. Not to what you would like it to be. The latter requires a transformation.
+</div>
+
 
 The definition of the geometry as an object of the `SpatialPoints` class, provides a number of spatial functionalities that are not directly available to *default* matrices. As said in the introduction, the `sp` class mainly focuses on the classes (objects) and not on the functionalities. However, an essential functionality provided by `sp` itself (apart from `over` and `aggregate`), is the **transformation of the coordinate reference system (CRS)**:
 
@@ -102,8 +113,8 @@ leaflet() %>%
 ```
 
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 Check the [documentation of the leaflet Package](https://rstudio.github.io/leaflet/) and adapt the following items to the leaflet map:<br>
 (1) The coordinates should be replaced by an icon marker instead of just a circle<br>
@@ -114,8 +125,10 @@ The output should look like:
 ```{r exercise1, echo=FALSE, eval=TRUE}
 ```
 
-<br><div class="alert alert-info">
-Notice that you can add any available WMS service to the map, by using the proper linkg to the WMS service. Examples are provided in [this tutorial](https://inbo-tutorials.netlify.com/spatial/wms/).
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+You can add any available WMS service to the map, by using the proper links to the WMS service. Examples are provided in [this tutorial](https://inbo-tutorials.netlify.com/spatial/wms/).
 </div>
 
 
@@ -210,8 +223,8 @@ pts_recorded_wgs84 <- spTransform(pts_recorded, wgs_84)
 pts_recorded_wgs84
 ```
 
-<div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 As your regularly encounter point coordinates that need conversion to another projection system, you decide to make a functions for future use:<br>
 
@@ -238,7 +251,12 @@ ex2_test <- reproject_points(pts_ex2_test, "longitude", "latitude",
 head(ex2_test)
 ```
 
-**Remark:** This function is part of the [`inborutil` package, ](https://inbo.github.io/inborutils) and can be used by installing the package. Another - related - function helps you to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coordinate reference systems.
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+This `reproject_points` function is part of the [`inborutil` package, ](https://inbo.github.io/inborutils/reference/reproject_coordinates.html) as the function `reproject_coordinates` and can be used after installing the `inborutils` package: `devtools::install_github("inbo/inborutils")`.
+</div>
+
 
 # Reading data: `rgdal`
 
@@ -301,7 +319,12 @@ head(as.data.frame(nete))
 
 Hence, the geometry and projection data is no longer contained, only the data itself.
 
-**Remark:** The `sp` data types do NOT support the `dplyr` package. If you want to use the `%>%` operator and the *verbs* such as `filter`, `mutate`,... as used in the `dplyr` package, you could start using the [`sf` package](https://cran.r-project.org/web/packages/sf/index.html), the newest package setup with the `tidyverse` environment in mind. [This introduction](http://strimas.com/r/tidy-sf/) and the [documentation of](https://github.com/edzer/sfr) of `sf` is good to start.
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
+
+The `sp` data types do NOT support the `dplyr` package. If you want to use the `%>%` operator and the *verbs* such as `filter`, `mutate`,... as used in the `dplyr` package, you could start using the [`sf` package](https://cran.r-project.org/web/packages/sf/index.html), the newest package setup with the `tidyverse` environment in mind. [This introduction](http://strimas.com/r/tidy-sf/) and the [documentation of](https://github.com/edzer/sfr) of `sf` is good to start.
+</div>
+
 
 ## `sp` overlay and aggregations
 
@@ -323,23 +346,22 @@ ids <- over(spTransform(eu_10grid, wgs_lambert), pts_recorded)
 ids <- na.omit(ids)
 ids
 ```
-The result provides the indices of the `SpatialPolygonDataFrame` together with the `SpatialPointDataFrame` data entries.
+The result provides the indices of the `SpatialPolygonDataFrame` together with the `SpatialPointDataFrame` data entries. `Lines`, and `Polygon`-`Polygon` overlays require `rgeos`.
 
-**Remark** `Lines`, and `Polygon`-`Polygon` overlays require `rgeos`.
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
 
-<br><div class="alert alert-info">
 Check the vignette (`vignette('over')` in console) to get more details about all the different spatial JOIN options with the `sp` package. On the other hand, the `sf` package interface for spatial joins is more intuitive. This [point-in-polygon example](https://gist.github.com/stijnvanhoey/7b51017718834f150f781a256292904e#file-spatial_join-r) compares the `sp` and the `sf` implementation. 
 </div>
 
-<br><div class="alert alert-info">
-Notice that it is not always needed to download both data sets and do the spatial operation on your own machine. Some WFS Webservices (providing maps online) support spatial operators such as within, intersects, contains,... directly. As such, the point in polygon problem can be tackled directly as explained [in the tutorial [Download feature attributes from WFS](https://inbo-tutorials.netlify.com/spatial/wfs/). 
-</div>
 
 ## `rgeos` geometry operations
 
 The `rgeos` package provide a number of geometric operations, such as `gArea()`, `gLength()`, `gDistance()`, `gBuffer()`,... (single geometry) or `gIntersection()`, `gUnion()`, `gContains`,... (combining geometries). 
 
-<br><div class="alert alert-info">
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
 As most commands of rgeos start with g***, use the power of the TAB-button to explore the available functions of the `rgeos` package: `rgeos::g` + TAB
 </div>
 
@@ -378,8 +400,8 @@ plot(horizontal, add = TRUE)
 plot(horizontal[true_ids$row,], add = TRUE, col = red)
 ```
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 Make a `leaflet` plot (with open street map background) of the `nete` sub catchments, together with the `Centroid` for each of the sub geometries.
 
@@ -390,6 +412,12 @@ Make a `leaflet` plot (with open street map background) of the `nete` sub catchm
 The output should look like:
 ```{r exercise3, echo=FALSE, eval=TRUE}
 ```
+
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+It is not always needed to download both data sets and do the spatial operation on your own machine. Some WFS Webservices (providing maps online) support spatial operators such as within, intersects, contains,... directly. As such, the point in polygon problem can be tackled directly as explained in the tutorial ['download feature attributes from WFS'](https://inbo-tutorials.netlify.com/spatial/wfs/).
+</div>
 
 # Mapping vector data
 
@@ -439,16 +467,16 @@ nete_df <- merge(nete_df, as.data.frame(nete))
 head(nete_df)
 ```
 
-<br><div class="alert alert-info">
-<b>REMEMBER</b>
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
 
 In order to plot `SpatialLinesDataFrame` or `SpatialPolygonsDataFrame` data, the **spatial data** (with `fortify()`) need to be merged with the **attribute data** (with `as.data.frame`) to have a `ggplot2` compatible `data.frame`!
 </div>
 
 This seems to be a useful small tooling for a custom R function...
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 Write a function called `prepare_spatial_for_ggplot` that takes a `SpatialLinesDataFrame` or `SpatialPolygonsDataFrame` as input and execute the necessary steps (described above: `fortify`/`as.data.frame`/`merge`) to enable the plotting with `ggplot2`. The output of the function is a `data.frame`.
 </div>
@@ -462,8 +490,6 @@ ex4_test <- prepare_spatial_for_ggplot(nete)
 head(ex4_test)
 ```
 
-
-
 For plotting `Lines`, use the `ggplot` function `geom_path()` (and NOT `geom_line()`). For polygons, you can choose:
 * `geom_path()`: only plot the borders
 * `geom_polygon()`: usa a fill color for the polygons
@@ -474,9 +500,15 @@ ggplot(nete_df, aes(x = long, y = lat)) +
     coord_fixed()
 ```
 
-**Remark:** Adding `group = group` (grouping according to the by fortify derived groups) is required to plot the individual polygons separately(!)
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
 
-<br><div class="alert alert-info">
+Adding `group = group` (grouping according to the by fortify derived groups) is required to plot the individual polygons separately(!)
+</div>
+
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
 Starting from ggplot2 version 2.2.1, the plotting of spatial objects defined in the `sf` package will no longer need this transformation, but will directly provide the `geom_sf` function to plot vector data in `ggplot2`, see [the documentation](http://ggplot2.tidyverse.org/reference/ggsf.html)! 
 </div>
 
@@ -513,7 +545,12 @@ ggmap(map) +
               data = nete_df_wgs84, colour = "red")
 ```
 
-**Remark:** each of these online providers have different `maptype` options. Check the help of these functions to see the options (e.g. `?get_stamenmap`).
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+Each of these online providers have different `maptype` options. Check the help of these functions to see the options (e.g. `?get_stamenmap`).
+</div>
+
 
 The usage of Google maps enables the option to provide a *google maps search* as center of the image
 ```{r plot_ggmap_google, message=FALSE}
@@ -526,8 +563,8 @@ ggmap(map) +
 
 The [Github repository](https://github.com/dkahle/ggmap) and [the paper](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) provide more introductionary material to get you started with `ggmap`. Another potentially useful plotting package is the [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-nutshell.html) package.
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 Pick **any spatial vector** data set (shapefile, geojson,...) currently on your computer:
 

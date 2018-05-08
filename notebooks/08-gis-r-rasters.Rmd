@@ -1,8 +1,14 @@
 ---
 title: "GIS R rasters"
+author:
+- Stijn Van Hoey
 output:
-  html_document: default
-  html_notebook: default
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    fig_caption: false
 ---
 
 ```{r setup, echo=FALSE, cache=FALSE}
@@ -28,8 +34,10 @@ The `sp` package supports raster (grid) data with the `SpatialGridDataFrame` and
 
 Whereas `sp` mainly focuses on the classes itself, the `raster` package has functions for creating, reading, manipulating, and writing raster data. The package provides, among other things, general raster data manipulation functions that can easily be used to develop more specific functions. 
 
-<br><div class="alert alert-info">
-Remember that, when required, the conversion from `Spatial***` raster representations to the `raster` package raster representations is just a single command `raster(sp_raster_variable_name)` away.
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
+
+When required, the conversion from `Spatial***` raster representations to the `raster` package raster representations is just a single command `raster(sp_raster_variable_name)` away.
 </div>
 
 # Raster representations
@@ -125,8 +133,10 @@ inMemory(r_example)
 
 This defines the data itself is stored in the working memory of your computer. For manually created `RasterLayers`, the data will be in memory. However, when accessing data from files, `raster` support data access without actually loading all the data in memory.
 
-<br><div class="alert alert-info">
-Remember that `RasterLayer` objects can be created from scratch, a file, an Extent object, a matrix, an 'image' object, or from a `Raster*`, `Spatial***`,... object
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
+
+A `RasterLayer` objects can be created from scratch, a file, an Extent object, a matrix, an 'image' object, or from a `Raster*`, `Spatial***`,... object
 </div>
 
 A useful functionality is the conversion between XYZ columns spatial data representation and a raster representation for points **on a regular grid**: 
@@ -151,10 +161,10 @@ lonlat <- cbind(longitude, latitude)
 head(lonlat)
 ```
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
-Check the documentation of the `rasterize` command provided by the `raster` package and convert the `lonlat` set of irregular points to a regular grid with a resolution of 0.1 degrees and an appropriate spatial `extent` (e.g. Belgium). Make sure that the resulting raster values represent the number of points per grid cell. Make plot of the resulting raster.
+Check the documentation of the `rasterize` command provided by the `raster` package and convert the `lonlat` set of irregular points to a regular grid with a resolution of 0.1 degrees and an appropriate spatial `extent` (e.g. Belgium). Make sure that the resulting raster values represent the number of points per grid cell. Make a plot of the resulting raster.
 </div>
 
 The output should look like:
@@ -215,7 +225,12 @@ r_reproject <- projectRaster(r_example, base_raster)
 plot(r_reproject)
 ```
 
-**Remark:** The function `projectExtent` is a great utility to only project the `extent` of the data and retrieve similar boundaries in the new CRS.
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+The function `projectExtent` is a great utility to only project the `extent` of the data and retrieve similar boundaries in the new CRS.
+</div>
+
 
 # Reading data: `rgdal` or `raster`
 
@@ -237,6 +252,12 @@ Actually, the set of data formats you can interact with, *does not depend on R*,
 ```{r read_show_drivers}
 head(gdalDrivers()) # Just the first 6 records are shown here
 ```
+
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+Most formats supported for reading can also be written to. This is supported by both `writeGDAL` (`rgdal` package) and `writeRaster` (`raster` package). Furthermore, for large rasters, the `writeValues` function is useful as well, as it supports writing the data in chunks. 
+</div>
 
 Still, the `raster` command of the `raster` package can also directly read raster files in several formats, also relying on the `rgdal` package (and the underlying **GDAL** driver) behind the scenes.
 
@@ -273,21 +294,23 @@ plot(landstat_example)
 ```
 (Overview about the landstat bands/layers wavelengths is given [here](https://landsat.gsfc.nasa.gov/landsat-8/landsat-8-overview/) )
 
-**Remark: ** Most formats supported for reading can also be written to. This is supported by both `writeGDAL` (`rgdal` package) and `writeRaster` (`raster` package). Furthermore, for large rasters, the `writeValues` function is useful as well, as it supports writing the data in chunks. 
-<br><div class="alert alert-info">
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
+
 For reading in raster file data, try with the `raster` command first. If this is not successful, check if the `readGDAL` function can read it.
 </div>
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 In the `data` folder, an `Arc/Info Binary Grid` is provided, called `grnt_bodem`. read in the data with the variable-name `grnt_bodem` and make a plot using the `bpy.colors` color scale.
+
+(*In the case your GDAL driver does not support Arc/Info Binary Grid, read in the `grote_nete_bodem.tif` file in the data folder*)
 </div>
 
 The output should look like:
 ```{r exercise6, echo=FALSE, eval=TRUE}
 ```
-(*In the case your GDAL driver does not support Arc/Info Binary Grid, read in the `grote_nete_bodem.tif` file in the data folder*)
 
 # Raster data manipulation
 
@@ -308,10 +331,14 @@ r_example[r_example < 3]  <- 0.
 plot(r_example)
 ```
 
-**Remark:** The `reclassify` function provides the same functionality, but as a higher level function. For larger reclassify operations (many classes), the application of `reclassify` is worthwhile to use.
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
 
-<br><div class="alert alert-success">
-<b>EXERCISE</b>
+The `reclassify` function provides the same functionality, but as a higher level function. For larger reclassify operations (many classes), the application of `reclassify` is worthwhile to use.
+</div>
+
+<div class="bs-callout bs-callout-exercise">
+<h4>Exercise:</h4>
 
 In the `data` folder, a text file `systemtable_example.txt` is available containing the information of a reclassification of the `grnt_bodem` variable. Read the text-file as a `data.frame` and save the content as variable `class_table`. Use the `class_table` to `reclassify` the `grnt_bodem` raster. Plot the output with any colors you would like to use.
 </div>
@@ -320,7 +347,7 @@ The output could look like (depends on your color preferences):
 ```{r exercise7, echo=FALSE, eval=TRUE}
 ```
 
-**Remark:** To decide about the color you could use for maps, the [colorbrewer website](http://colorbrewer2.org) is a great start. You can copy/paste the color codes from the website itself, but the package `scales` provides the `brewer_pal` function, providing direct load of the colors as a colormap:
+To decide about the color you could use for maps, the [colorbrewer website](http://colorbrewer2.org) is a great start. You can copy/paste the color codes from the website itself, but the package `scales` provides the `brewer_pal` function, providing direct load of the colors as a colormap:
 ```
 plot(grnt_bodem_reclassified, breaks = c(0, 1, 2, 3), 
      col = scales::brewer_pal(palette = "Greens")(3))
@@ -351,8 +378,10 @@ plot(ndvi2)
 
 Several *high level* functions (i.e. typical GIS software functions) have been implemented for `RasterLayer` objects. Examples are `contour()`, `focal()` (moving window), `clump()` (detect patches of connected cells), `zonal()` (zonal statistics), `terrain()` (slope, aspect and other terrain characteristics from dem), `(dis)aggregate` (change resolution)... See the help files for more detailed descriptions of each function. (also `calc` is actually a high level function).
 
-<br><div class="alert alert-info">
-**Remember**: these functions work as well for raster data sets that cannot be loaded into memory!
+<div class="bs-callout bs-callout-warning">
+<h4>REMEMBER:</h4>
+
+These functions work equally well for raster data sets that cannot be loaded into memory!
 </div>
 
 As an example, converting the `grnt_bodem` raster to a binary mask with 0/1 values can be achieved by the `clump` function:
@@ -374,7 +403,13 @@ r_data_crop <- crop(r_data, deelbekkens_wgs84)
 r_data_mask <- mask(r_data_crop, deelbekkens_wgs84)
 plot(r_data_mask)
 ```
-**Remark:** The `gdalwarp` functionality to crop a vector file can also be executed directly with GDAL from the command line. As such, similar to the `subprocess` trick in Python (`05-the-power-of-gdal.ipynb`) to run a GDAL command within Python as if it would be on the command line, this can be achieved by using `system()` (instead of `subprocess`).
+
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
+
+The `gdalwarp` functionality to crop a vector file can also be executed directly with GDAL from the command line. As such, similar to the `subprocess` trick in Python (`05-the-power-of-gdal.ipynb`) to run a GDAL command within Python as if it would be on the command line, this can be achieved by using `system()` (instead of `subprocess`).
+</div>
+
 
 # Mapping raster data
 
@@ -389,4 +424,8 @@ For multi-band files, the `plotRGB` provides the option to plot *false color com
 plotRGB(landstat_example, r = 5, g = 4, b = 3)
 ```
 
+<div class="bs-callout bs-callout-info">
+<h4>Notice:</h4>
 Another interesting package, is the [rasterVis](https://oscarperpinan.github.io/rastervis/) package. The package provides a set of methods for enhanced visualization and interaction. Specifically the space-time plots are well designed.
+</div>
+
