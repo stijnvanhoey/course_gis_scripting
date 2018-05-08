@@ -296,11 +296,12 @@ head(as.data.frame(nete))
 
 Hence, the geometry and projection data is no longer contained, only the data itself.
 
-**Remark:** The `sp` data types do NOT support the `dplyr` package. If you want to use the `%>%` operator and the *verbs* such as `filter`, `mutate`,... as used in the `dplyr` package, you could check and install the [`spdplyr`](https://cran.r-project.org/web/packages/spdplyr/spdplyr.pdf) package. Another option is to start using the [`sf` package](https://cran.r-project.org/web/packages/sf/index.html), the newest package setup with the `tidyverse` environment in mind. [This introduction](http://strimas.com/r/tidy-sf/) and the [documentation of](https://github.com/edzer/sfr) of `sf` is good to start.
+**Remark:** The `sp` data types do NOT support the `dplyr` package. If you want to use the `%>%` operator and the *verbs* such as `filter`, `mutate`,... as used in the `dplyr` package, you could start using the [`sf` package](https://cran.r-project.org/web/packages/sf/index.html), the newest package setup with the `tidyverse` environment in mind. [This introduction](http://strimas.com/r/tidy-sf/) and the [documentation of](https://github.com/edzer/sfr) of `sf` is good to start.
 
 ## `sp` overlay and aggregations
 
 The `sp` package provides mostly the data types. However, the `spTransform` function is an essential function provided by the package itself. Two other functions of the `sp` package are worth mentioning:
+
 *  `disaggregate`: groups of `Line` or `Polygon` (multi) are disaggregated to one `Line`/`Polygon` for each feature. When applied to the `deelbekkens` data set:
 
 ```{r sp_disaggreg}
