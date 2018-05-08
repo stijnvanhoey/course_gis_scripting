@@ -1,0 +1,112 @@
+
+/* Links */
+a,
+a:hover,
+a:active,
+a:visited {
+     color: #C04384;
+}
+
+/* Whitespace */
+.section {
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    line-height: 1.7;
+    margin-bottom: 0.5em;
+}
+
+h1:before {
+    /* Scrollspy overwrites margin/padding-top, so need to use :before */
+    display: block;
+    content: "";
+    margin-top: 1.2em;
+}
+
+/* Side menu */
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover {
+    background-color: #C04384;
+    border-color: #C04384;
+}
+
+/* custom alert */
+.alert-danger {
+    background-color: #843860;
+    border-color: #843860;
+    color: #ffffff;
+}
+
+/* Bootstrap call out custom css */
+/* https://cpratt.co/twitter-bootstrap-callout-css-styles/ */
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+.bs-callout code {
+    border-radius: 3px;
+}
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+.bs-callout-default {
+    border-left-color: #777;
+}
+.bs-callout-default h4 {
+    color: #777;
+}
+.bs-callout-primary {
+    border-left-color: #428bca;
+}
+.bs-callout-primary h4 {
+    color: #428bca;
+}
+.bs-callout-success {
+    border-left-color: #5cb85c;
+}
+.bs-callout-success h4 {
+    color: #5cb85c;
+}
+.bs-callout-danger {
+    border-left-color: #843860;
+}
+.bs-callout-danger h4 {
+    color: #843860;  /* #d9534f */
+}
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+.bs-callout-warning h4 {
+    color: #f0ad4e;
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout-info h4 {
+    color: #5bc0de;
+}
+.bs-callout-exercise {
+    border-left-color: #356196;
+}
+.bs-callout-exercise h4 {
+    color: #356196;
+
