@@ -11,7 +11,7 @@ knitr::read_chunk('./_solutions/_solutions_exercises.R')
 
 # Setup
 
-Make sure your have `rgdal` and `raster` installed:
+Make sure your have `rgdal`, `raster` and `igraph` installed:
 
 ```{r install, eval=FALSE, include=FALSE}
 install.packages(c("rgdal", "raster", "igraph"))
