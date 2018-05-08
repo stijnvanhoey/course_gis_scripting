@@ -320,10 +320,10 @@ ids
 ```
 The result provides the indices of the `SpatialPolygonDataFrame` together with the `SpatialPointDataFrame` data entries.
 
-**Remark** `Lines`, and `Polygon`-`Polygon` overlays require `rgeos`
+**Remark** `Lines`, and `Polygon`-`Polygon` overlays require `rgeos`.
 
 <br><div class="alert alert-info">
-Check the vignette (`vignette('over')` in console) to get more details about all the different spatial JOIN options.
+Check the vignette (`vignette('over')` in console) to get more details about all the different spatial JOIN options with the `sp` package. On the other hand, the `sf` package interface for spatial joins is more intuitive. This [point-in-polygon example](https://gist.github.com/stijnvanhoey/7b51017718834f150f781a256292904e) compares the `sp` and the `sf` implementation. 
 </div>
 
 ## `rgeos` geometry operations
