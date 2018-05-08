@@ -233,7 +233,7 @@ ex2_test <- reproject_points(pts_ex2_test, "longitude", "latitude",
 head(ex2_test)
 ```
 
-**Remark:** This function is part of an [`inbo-rutil` script,  ](https://github.com/inbo/inbo-rutils/blob/master/gis/guess_projection.R) to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coordinate reference systems.
+**Remark:** This function is part of the [`inborutil` package, ](https://inbo.github.io/inborutils) and can be used by installing the package. Another - related - function helps you to guess a given projection of a given data set, when no CRS information is provided. The `guess_projection` function creates a *leaflet* plot with the coordinates in a variety of predefined coordinate reference systems.
 
 # Reading data: `rgdal`
 
