@@ -114,6 +114,11 @@ The output should look like:
 ```{r exercise1, echo=FALSE, eval=TRUE}
 ```
 
+<br><div class="alert alert-info">
+Notice that you can add any available WMS service to the map, by using the proper linkg to the WMS service. Examples are provided in [this tutorial](https://inbo-tutorials.netlify.com/spatial/wms/).
+</div>
+
+
 ## Spatial***DataFrame
 
 The geometry classes provided by `sp` contain the spatial information, but do not add data to these points (or lines/polygons). The data attribute table is typically provided as a `data.frame`. For this reason, `sp` also provides classes that link the geometries with DataFrames: `SpatialPointsDataFrame`, `SpatialLinesDataFrame` and `SpatialPolygonsDataFrame`. 
