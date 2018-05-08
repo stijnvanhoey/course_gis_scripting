@@ -467,6 +467,10 @@ ggplot(nete_df, aes(x = long, y = lat)) +
 
 **Remark:** Adding `group = group` (grouping according to the by fortify derived groups) is required to plot the individual polygons separately(!)
 
+<br><div class="alert alert-info">
+Starting from ggplot2 version 2.2.1, the plotting of spatial objects defined in the `sf` package will no longer need this transformation, but will directly provide the `geom_sf` function to plot vector data in `ggplot2`, see [the documentation](http://ggplot2.tidyverse.org/reference/ggsf.html)! 
+</div>
+
 ## `ggmap`
 
 The `ggmap` package is the spatial plotting extension to `ggplot2`. It provides the ability to integrate the graphs of `ggplot2` with spatial backgrounds coming from online resources such as Google maps, [stamen maps](http://maps.stamen.com/#terrain/12/37.7706/-122.3782) and OpenStreetMap. The most convenient way to setup these background maps is to use the `ggmap::get_***` functions. For example, using the `toner-background` of stamen:
