@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Stijn Van Hoey" />
+
+
+<title>GIS R rasters</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="static\css\inbo.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Introduction to GIS R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="07-gis-r-vectors.html">R vector</a>
+    </li>
+    <li>
+      <a href="08-gis-r-rasters.html">R raster</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stijnvanhoey/course_gis_scripting">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">GIS R rasters</h1>
+<h4 class="author"><em>Stijn Van Hoey</em></h4>
+
+</div>
+
+
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Make sure your have <code>rgdal</code>, <code>raster</code> and <code>igraph</code> installed:</p>
+<pre class="r"><code>library(&#39;raster&#39;)
+library(&#39;rgdal&#39;)</code></pre>
+</div>
+<div id="raster-data-objects-raster" class="section level1">
+<h1><span class="header-section-number">2</span> Raster data objects: <code>raster</code></h1>
+<p>The <code>sp</code> package supports raster (grid) data with the <code>SpatialGridDataFrame</code> and <code>SpatialPixelsDataFrame</code> classes. However, the <code>raster</code> package provides more specialized functionalities to raster data. Similar to the <code>sp</code> package, the <code>raster</code> package provides a number of classes and a number of functionalities to operate and interact with these classes. The <code>RasterLayer</code>, <code>RasterStack</code> and <code>RasterBrick</code> classes are the most important.</p>
+<p>Whereas <code>sp</code> mainly focuses on the classes itself, the <code>raster</code> package has functions for creating, reading, manipulating, and writing raster data. The package provides, among other things, general raster data manipulation functions that can easily be used to develop more specific functions.</p>
+<div class="bs-callout bs-callout-warning">
+<h4>
+REMEMBER:
+</h4>
+<p>When required, the conversion from <code>Spatial***</code> raster representations to the <code>raster</code> package raster representations is just a single command <code>raster(sp_raster_variable_name)</code> away.</p>
+</div>
+</div>
+<div id="raster-representations" class="section level1">
+<h1><span class="header-section-number">3</span> Raster representations</h1>
+<p>A 2D matrix is actually also a representation of a GIS raster, as it provides the possibility to do element-wise calculations:</p>
+<pre class="r"><code>example_matrix &lt;- matrix(1:6, nrow = 2, ncol = 3)
+example_matrix</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    3    5
+## [2,]    2    4    6</code></pre>
+<p>Hence, a reclassification of the raster data can be achieved as follows:</p>
+<pre class="r"><code>example_matrix[example_matrix &gt;= 3]  &lt;- 3.
+example_matrix[example_matrix &lt; 3]  &lt;- 0.
+example_matrix</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    0    3    3
+## [2,]    0    3    3</code></pre>
+<p>However, for GIS raster representations, the classes provided by the <code>raster</code> package provide these type of operations while having the spatial <code>extent</code> and the <code>projection</code> integrated as well.</p>
+<div id="rasterlayer" class="section level2">
+<h2><span class="header-section-number">3.1</span> <code>RasterLayer</code></h2>
+<p>A <code>RasterLayer</code> object represents <strong>single-layer</strong> (variable) raster data. A <code>RasterLayer</code> object always stores a number of fundamental parameters that describe it:</p>
+<ul>
+<li>the number of columns and rows (resolution)</li>
+<li>the spatial <code>extent</code> (cfr. <code>bbox</code>)</li>
+<li>the Coordinate Reference System (CRS)</li>
+</ul>
+<p>To create a <code>RasterLayer</code> manually, provide the required minimal information:</p>
+<pre class="r"><code># specify the RasterLayer with the following parameters:
+# - minimum x coordinate (left border)
+# - minimum y coordinate (bottom border)
+# - maximum x coordinate (right border)
+# - maximum y coordinate (top border)
+# - resolution (cell size) in each dimension
+r_example &lt;- raster(xmn = 4.42, ymn = 50.9, xmx = 5.4, ymx = 51.4, 
+            resolution = c(0.1, 0.1))
+r_example</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 5, 10, 50  (nrow, ncol, ncell)
+## resolution  : 0.1, 0.1  (x, y)
+## extent      : 4.42, 5.42, 50.9, 51.4  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0</code></pre>
+<p>From the output we learn that with the default parameters, the CRS is defined here in degrees. However, when it would not make sense, the CRS is default put to <code>NA</code>:</p>
+<pre class="r"><code>raster(ncol = 36, nrow = 18, xmn = -1000, xmx = 1000, ymn = -100, ymx = 900)</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 18, 36, 648  (nrow, ncol, ncell)
+## resolution  : 55.55556, 55.55556  (x, y)
+## extent      : -1000, 1000, -100, 900  (xmin, xmax, ymin, ymax)
+## coord. ref. : NA</code></pre>
+<p>Consider the example <code>r_example</code> defined in degrees and extract some additional information:</p>
+<pre class="r"><code>class(r_example)</code></pre>
+<pre><code>## [1] &quot;RasterLayer&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;raster&quot;</code></pre>
+<p>Indeed, we created a single layer raster layer…</p>
+<pre class="r"><code>res(r_example)</code></pre>
+<pre><code>## [1] 0.1 0.1</code></pre>
+<p>with a resolution of 0.1 degrees, which we can change:</p>
+<pre class="r"><code>res(r_example) &lt;- 0.05
+r_example</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 10, 20, 200  (nrow, ncol, ncell)
+## resolution  : 0.05, 0.05  (x, y)
+## extent      : 4.42, 5.42, 50.9, 51.4  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0</code></pre>
+<p>However, the data currently only defines the skeleton of a raster data set. That is, it knows about its location, resolution, etc., but there are no values associated with it:</p>
+<pre class="r"><code>hasValues(r_example)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>Let’s provide some random numbers from a uniform distribution:</p>
+<pre class="r"><code>r_example &lt;- setValues(r_example, runif(200, min = 1., max = 10.))
+r_example</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 10, 20, 200  (nrow, ncol, ncell)
+## resolution  : 0.05, 0.05  (x, y)
+## extent      : 4.42, 5.42, 50.9, 51.4  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
+## data source : in memory
+## names       : layer 
+## values      : 1.117749, 9.933364  (min, max)</code></pre>
+<pre class="r"><code>plot(r_example)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/layer_example_plot-1.png" width="672" /></p>
+<p>These <code>values</code> can be <code>sliced</code>, just as we would do with vectors and matrices:</p>
+<pre class="r"><code>values(r_example)[1:10]</code></pre>
+<pre><code>##  [1] 2.656854 9.384848 5.952935 6.133394 9.360611 6.568499 6.003830
+##  [8] 2.059721 4.094929 2.735926</code></pre>
+<p>An important feature of the <code>raster</code> package is the option to work <code>inMemory</code> or not:</p>
+<pre class="r"><code>inMemory(r_example)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>This defines the data itself is stored in the working memory of your computer. For manually created <code>RasterLayers</code>, the data will be in memory. However, when accessing data from files, <code>raster</code> support data access without actually loading all the data in memory.</p>
+<div class="bs-callout bs-callout-warning">
+<h4>
+REMEMBER:
+</h4>
+<p>A <code>RasterLayer</code> objects can be created from scratch, a file, an Extent object, a matrix, an ‘image’ object, or from a <code>Raster*</code>, <code>Spatial***</code>,… object</p>
+</div>
+<p>A useful functionality is the conversion between XYZ columns spatial data representation and a raster representation for points <strong>on a regular grid</strong>:</p>
+<pre class="r"><code>xyz_example &lt;- rasterToPoints(r_example)
+head(xyz_example)</code></pre>
+<pre><code>##          x      y    layer
+## [1,] 4.445 51.375 2.656854
+## [2,] 4.495 51.375 9.384848
+## [3,] 4.545 51.375 5.952935
+## [4,] 4.595 51.375 6.133394
+## [5,] 4.645 51.375 9.360611
+## [6,] 4.695 51.375 6.568499</code></pre>
+<pre class="r"><code>plot(rasterFromXYZ(xyz_example))</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/layer_xyz_to_raster-1.png" width="672" /></p>
+<p>However, in many occasions these XYZ combination are not provided on a regular grid. See the <code>rasterize</code> function for points that are <strong>not on a regular grid</strong>. An example of points that are not on a regular grid:</p>
+<pre class="r"><code>longitude &lt;- c(4.4543, 5.02789, 4.94202, 4.49238, 4.49054, 4.54044, 5.95192, 
+               4.49496, 4.4958, 5.68327, 4.49054, 4.49054, 4.4958, 4.48938)
+latitude &lt;- c(51.33847, 51.24824, 51.24325, 51.26218, 51.25701, 51.27518, 
+              51.30803, 51.25803, 51.26106, 51.04185, 51.25701, 51.25701, 
+              51.26106, 51.25955)
+lonlat &lt;- cbind(longitude, latitude)
+head(lonlat)</code></pre>
+<pre><code>##      longitude latitude
+## [1,]   4.45430 51.33847
+## [2,]   5.02789 51.24824
+## [3,]   4.94202 51.24325
+## [4,]   4.49238 51.26218
+## [5,]   4.49054 51.25701
+## [6,]   4.54044 51.27518</code></pre>
+<div class="bs-callout bs-callout-exercise">
+<h4>
+Exercise:
+</h4>
+<p>Check the documentation of the <code>rasterize</code> command provided by the <code>raster</code> package and convert the <code>lonlat</code> set of irregular points to a regular grid with a resolution of 0.1 degrees and an appropriate spatial <code>extent</code> (e.g. Belgium). Make sure that the resulting raster values represent the number of points per grid cell. Make a plot of the resulting raster.</p>
+</div>
+<p>The output should look like: <img src="08-gis-r-rasters_files/figure-html/exercise5-1.png" width="672" /></p>
+</div>
+<div id="rasterstack-and-rasterbrick" class="section level2">
+<h2><span class="header-section-number">3.2</span> <code>RasterStack</code> and <code>RasterBrick</code></h2>
+<p>Single layer raster objects are very common. Still, a collection of rasters with the same spatial extent and resolution is a common case when doing spatial analysis (combining rasters with representing each a variable). In fact, a <code>RasterStack</code>/<code>RasterBrick</code> is a collection of <code>RasterLayer</code> objects with the same spatial extent and resolution.</p>
+<p>The main difference between <code>RasterStack</code> and <code>RasterBrick</code> is that a <code>RasterStack</code> is a loose collection of <code>RasterLayer</code> objects that can refer to <strong>different files</strong> (but must all have the same extent and resolution), whereas a <code>RasterBrick</code> can only point to a <strong>single file</strong>. A typical example of a <code>RasterBrick</code> object is the representation of a multi-band satellite image.</p>
+<p>As an example, create a dummy <code>RasterStack</code> with 3 alternatives of the <code>r_example</code> bundled together:</p>
+<pre class="r"><code>s_example &lt;- stack(r_example, r_example**2, r_example/2.)
+plot(s_example)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/stack_example-1.png" width="672" /></p>
+<p>When checking the properties</p>
+<pre class="r"><code>s_example</code></pre>
+<pre><code>## class       : RasterStack 
+## dimensions  : 10, 20, 200, 3  (nrow, ncol, ncell, nlayers)
+## resolution  : 0.05, 0.05  (x, y)
+## extent      : 4.42, 5.42, 50.9, 51.4  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
+## names       :   layer.1,   layer.2,   layer.3 
+## min values  : 1.1177493, 1.2493634, 0.5588746 
+## max values  :  9.933364, 98.671717,  4.966682</code></pre>
+<p>Make sure you notice the additional <code>dimension</code> in the description (<code>nlayers</code>).</p>
+</div>
+<div id="projection" class="section level2">
+<h2><span class="header-section-number">3.3</span> Projection</h2>
+<p>To transform a <code>RasterLayer</code> to another CRS you can use the function <code>projectRaster</code>. However, whereas the transformation of coordinates (vector formats) is rather trivial, the re-projection of a raster representation can result in a <strong>loss of precision</strong> and estimates for the values of new cells must be made based on the values in the old cells. If the values are class data, the <em>nearest neighbor</em> is commonly used. Otherwise some sort of interpolation (e.g. <em>bilinear</em>) is required.</p>
+<p>An introduction to the <code>CRS</code> class definition to specify the coordinate reference system is provided in the <code>07-gis-r-vectors.Rmd</code> notebook. The definition of the <code>CRS</code> object is completely similar:</p>
+<pre class="r"><code>crs_lambert &lt;- CRS(&quot;+init=epsg:31370&quot;) </code></pre>
+<p>Using the CRS, the re-projection with the <code>projectRaster</code>:</p>
+<pre class="r"><code>r_reproject &lt;- projectRaster(r_example, crs = crs_lambert)
+r_reproject</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 12, 24, 288  (nrow, ncol, ncell)
+## resolution  : 3500, 5560  (x, y)
+## extent      : 146566.1, 230566.1, 171613.3, 238333.3  (xmin, xmax, ymin, ymax)
+## coord. ref. : +init=epsg:31370 +proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs 
+## data source : in memory
+## names       : layer 
+## values      : 1.224281, 10.10082  (min, max)</code></pre>
+<p>However, using the default parameters, we do not have control on the spatial resolution (dimensions) of the resulting reprojected raster. Setting the resolution provides more control:</p>
+<pre class="r"><code>r_reproject &lt;- projectRaster(r_example, crs = crs_lambert, 
+                             res = 5000)
+r_reproject</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 13, 16, 208  (nrow, ncol, ncell)
+## resolution  : 5000, 5000  (x, y)
+## extent      : 148566.1, 228566.1, 172773.3, 237773.3  (xmin, xmax, ymin, ymax)
+## coord. ref. : +init=epsg:31370 +proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs 
+## data source : in memory
+## names       : layer 
+## values      : 1.432891, 9.139092  (min, max)</code></pre>
+<p>But is generally advised to project a raster to another <code>raster</code> object. By providing an existing <code>RasterLayer</code> object, your newly projected data perfectly aligns with it.</p>
+<pre class="r"><code># Create a base_layer to project data to
+base_raster &lt;- raster(ncol = 20, nrow = 10, 
+                      xmn = 153566.1, xmx = 223869.7, 
+                      ymn = 176630, ymx = 232773.3)
+crs(base_raster) &lt;- crs_lambert
+# reproject to the new raster
+r_reproject &lt;- projectRaster(r_example, base_raster)
+plot(r_reproject)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/proj_base-1.png" width="672" /></p>
+<div class="bs-callout bs-callout-info">
+<h4>
+Notice:
+</h4>
+<p>The function <code>projectExtent</code> is a great utility to only project the <code>extent</code> of the data and retrieve similar boundaries in the new CRS.</p>
+</div>
+</div>
+</div>
+<div id="reading-data-rgdal-or-raster" class="section level1">
+<h1><span class="header-section-number">4</span> Reading data: <code>rgdal</code> or <code>raster</code></h1>
+<p><em>First unzip the <code>.tif</code> example data in the data file to the scratch folder</em>:</p>
+<pre class="r"><code>unzip(&#39;../data/NE1_50m_SR.zip&#39;, exdir = &quot;../scratch&quot;)</code></pre>
+<p>Note that in most cases where real data is analyzed, these <code>raster*</code> objects are created from a file. The functionality to read <strong>raster</strong> data is provided by the <code>readGDAL</code> function of the <code>rgdal</code> package:</p>
+<pre class="r"><code>r_data = readGDAL(&quot;../scratch/NE1_50M_SR/NE1_50M_SR.tif&quot;)</code></pre>
+<pre><code>## ../scratch/NE1_50M_SR/NE1_50M_SR.tif has GDAL driver GTiff 
+## and has 5400 rows and 10800 columns</code></pre>
+<pre class="r"><code>class(r_data)</code></pre>
+<pre><code>## [1] &quot;SpatialGridDataFrame&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;sp&quot;</code></pre>
+<p>which results in a <code>SpatialGridDataFrame</code>.</p>
+<p>Actually, the set of data formats you can interact with, <em>does not depend on R</em>, but is dependent on your GDAL installation. To check if the installation supports a specific <strong>raster</strong> data format, you can get an overview of them by the <code>gdalDrivers()</code> command:</p>
+<pre class="r"><code>head(gdalDrivers()) # Just the first 6 records are shown here</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["long_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["create"],"name":[3],"type":["lgl"],"align":["right"]},{"label":["copy"],"name":[4],"type":["lgl"],"align":["right"]},{"label":["isRaster"],"name":[5],"type":["lgl"],"align":["right"]}],"data":[{"1":"AAIGrid","2":"Arc/Info ASCII Grid","3":"FALSE","4":"TRUE","5":"TRUE","_rn_":"1"},{"1":"ACE2","2":"ACE2","3":"FALSE","4":"FALSE","5":"TRUE","_rn_":"2"},{"1":"ADRG","2":"ARC Digitized Raster Graphics","3":"TRUE","4":"FALSE","5":"TRUE","_rn_":"3"},{"1":"AIG","2":"Arc/Info Binary Grid","3":"FALSE","4":"FALSE","5":"TRUE","_rn_":"4"},{"1":"AirSAR","2":"AirSAR Polarimetric Image","3":"FALSE","4":"FALSE","5":"TRUE","_rn_":"5"},{"1":"ARG","2":"Azavea Raster Grid format","3":"FALSE","4":"TRUE","5":"TRUE","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="bs-callout bs-callout-info">
+<h4>
+Notice:
+</h4>
+<p>Most formats supported for reading can also be written to. This is supported by both <code>writeGDAL</code> (<code>rgdal</code> package) and <code>writeRaster</code> (<code>raster</code> package). Furthermore, for large rasters, the <code>writeValues</code> function is useful as well, as it supports writing the data in chunks.</p>
+</div>
+<p>Still, the <code>raster</code> command of the <code>raster</code> package can also directly read raster files in several formats, also relying on the <code>rgdal</code> package (and the underlying <strong>GDAL</strong> driver) behind the scenes.</p>
+<p>Let’s check the space this <code>SpatialGridDataFrame</code> requires in memory:</p>
+<pre class="r"><code>print(object.size(r_data) , units = &quot;auto&quot;)</code></pre>
+<pre><code>## 667.4 Mb</code></pre>
+<p>and converting to a <code>RasterLayer</code> with the <code>raster</code> command:</p>
+<pre class="r"><code>r_data &lt;- raster(r_data)
+class(r_data)</code></pre>
+<pre><code>## [1] &quot;RasterLayer&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;raster&quot;</code></pre>
+<p>Let’s check again the space this requires in memory after conversion to a <code>raster</code> object:</p>
+<pre class="r"><code>print(object.size(r_data) , units = &quot;auto&quot;)</code></pre>
+<pre><code>## 222.5 Mb</code></pre>
+<p>Hence, for this type of raster GIS data, the <code>raster</code> representation is less memory demanding. Moreover, when reading these files directly with the <code>raster</code> command, the package will not load the data values in memory, while extracting the spatial information (extent, crs, dimensions):</p>
+<pre class="r"><code>r_data_raster &lt;- raster(&quot;../scratch/NE1_50M_SR/NE1_50M_SR.tif&quot;)
+r_data_raster</code></pre>
+<pre><code>## class       : RasterLayer 
+## band        : 1  (of  3  bands)
+## dimensions  : 5400, 10800, 58320000  (nrow, ncol, ncell)
+## resolution  : 0.03333333, 0.03333333  (x, y)
+## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
+## data source : C:\Users\stijn_vanhoey\Documents\GitHub\course_gis_scripting\scratch\NE1_50M_SR\NE1_50M_SR.tif 
+## names       : NE1_50M_SR 
+## values      : 0, 255  (min, max)</code></pre>
+<pre class="r"><code>inMemory(r_data_raster)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>In the case of multi-layer files, the <code>raster</code> function reads by default the first layer only. For multi-layer objects (e.g. multi-layer <code>GeoTIFF</code>), the <code>brick</code> or <code>stack</code> functions can be used to read data from file:</p>
+<pre class="r"><code>landstat_example &lt;- brick(&#39;../data/LE71700552001036SGS00_SR_Gewata_INT1U.tif&#39;)
+landstat_example</code></pre>
+<pre><code>## class       : RasterBrick 
+## dimensions  : 593, 653, 387229, 6  (nrow, ncol, ncell, nlayers)
+## resolution  : 30, 30  (x, y)
+## extent      : 829455, 849045, 825405, 843195  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=utm +zone=36 +ellps=WGS84 +units=m +no_defs 
+## data source : C:\Users\stijn_vanhoey\Documents\GitHub\course_gis_scripting\data\LE71700552001036SGS00_SR_Gewata_INT1U.tif 
+## names       : LE7170055//ta_INT1U.1, LE7170055//ta_INT1U.2, LE7170055//ta_INT1U.3, LE7170055//ta_INT1U.4, LE7170055//ta_INT1U.5, LE7170055//ta_INT1U.6 
+## min values  :                     4,                     6,                     3,                    18,                     6,                     2 
+## max values  :                    39,                    56,                    71,                   102,                   138,                   408</code></pre>
+<pre class="r"><code>plot(landstat_example)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/read_brick_plot-1.png" width="672" /> (Overview about the landstat bands/layers wavelengths is given <a href="https://landsat.gsfc.nasa.gov/landsat-8/landsat-8-overview/">here</a> )</p>
+<div class="bs-callout bs-callout-warning">
+<h4>
+REMEMBER:
+</h4>
+<p>For reading in raster file data, try with the <code>raster</code> command first. If this is not successful, check if the <code>readGDAL</code> function can read it.</p>
+</div>
+<div class="bs-callout bs-callout-exercise">
+<h4>
+Exercise:
+</h4>
+<p>In the <code>data</code> folder, an <code>Arc/Info Binary Grid</code> is provided, called <code>grnt_bodem</code>. read in the data with the variable-name <code>grnt_bodem</code> and make a plot using the <code>bpy.colors</code> color scale.</p>
+<p>(<em>In the case your GDAL driver does not support Arc/Info Binary Grid, read in the <code>grote_nete_bodem.tif</code> file in the data folder</em>)</p>
+</div>
+<p>The output should look like: <img src="08-gis-r-rasters_files/figure-html/exercise6-1.png" width="672" /></p>
+</div>
+<div id="raster-data-manipulation" class="section level1">
+<h1><span class="header-section-number">5</span> Raster data manipulation</h1>
+<div id="raster-algebra" class="section level2">
+<h2><span class="header-section-number">5.1</span> Raster algebra</h2>
+<p>Many generic functions that allow for simple and elegant raster algebra have been implemented for <code>Raster*</code> objects, including the normal algebraic operators such as <code>{}</code>, logical operators such as <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>==</code>, <code>!</code> and functions like <code>abs</code>, <code>round</code>, <code>ceiling</code>, <code>floor</code>, <code>trunc</code>, <code>sqrt</code>, <code>log</code>, <code>log10</code>, <code>exp</code>, <code>cos</code>, <code>sin</code>, <code>atan</code>, <code>tan</code>, <code>max</code>, <code>min</code>, <code>range</code>, <code>prod</code>, <code>sum</code>, <code>any</code>, <code>all</code>. In these functions you can mix raster objects with numbers, as long as the first argument is a raster object.</p>
+<pre class="r"><code>plot(sqrt(r_example + 10)/2, 
+     col = heat.colors(20))</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/man_algebra-1.png" width="672" /></p>
+<p>Again, also <code>boolean indexing</code> (conditional replacement) is provided, which supports the reclassification of a raster data set:</p>
+<pre class="r"><code>r_example[r_example &gt;= 3]  &lt;- 3.
+r_example[r_example &lt; 3]  &lt;- 0.
+plot(r_example)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/man_boolean_ind-1.png" width="672" /></p>
+<div class="bs-callout bs-callout-info">
+<h4>
+Notice:
+</h4>
+<p>The <code>reclassify</code> function provides the same functionality, but as a higher level function. For larger reclassify operations (many classes), the application of <code>reclassify</code> is worthwhile to use.</p>
+</div>
+<div class="bs-callout bs-callout-exercise">
+<h4>
+Exercise:
+</h4>
+<p>In the <code>data</code> folder, a text file <code>systemtable_example.txt</code> is available containing the information of a reclassification of the <code>grnt_bodem</code> variable. Read the text-file as a <code>data.frame</code> and save the content as variable <code>class_table</code>. Use the <code>class_table</code> to <code>reclassify</code> the <code>grnt_bodem</code> raster. Plot the output with any colors you would like to use.</p>
+</div>
+<p>The output could look like (depends on your color preferences): <img src="08-gis-r-rasters_files/figure-html/exercise7-1.png" width="672" /></p>
+<p>To decide about the color you could use for maps, the <a href="http://colorbrewer2.org">colorbrewer website</a> is a great start. You can copy/paste the color codes from the website itself, but the package <code>scales</code> provides the <code>brewer_pal</code> function, providing direct load of the colors as a colormap:</p>
+<pre><code>plot(grnt_bodem_reclassified, breaks = c(0, 1, 2, 3), 
+     col = scales::brewer_pal(palette = &quot;Greens&quot;)(3))</code></pre>
+<p>To perform calculations between the individual layers of a <code>RasterBrick</code> or <code>RasterStack</code>, the expression should refer to the individual layers of the object. Referring to individual layers in a <code>RasterBrick</code> or <code>RasterStack</code> object is done by using double square brackets <code>[[]]</code>. As an example, the calculation of the <a href="https://nl.wikipedia.org/wiki/Normalized_Difference_Vegetation_Index">NDVI</a>:</p>
+<p><span class="math display">\[NDVI = \frac{NIR - Red}{NIR + Red}\]</span></p>
+<pre class="r"><code>ndvi &lt;- (landstat_example[[4]] - landstat_example[[3]]) / (landstat_example[[4]] + landstat_example[[3]])
+plot(ndvi)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/ndvi_calc_memory-1.png" width="672" /></p>
+<p>Although this is a quick way to perform the calculation, directly adding, subtracting, multiplying, etc, the layers of big raster objects is <strong>not recommended</strong>. When working with big objects, it is advisable to use the <code>calc()</code> function to perform these types of calculations. The reason is that R needs to load <strong>all the data first into its internal memory</strong> before performing the calculation and then runs everything in one block. It is really easy to run out of memory when doing that. A big advantage of the <code>calc()</code> function is that it has a built-in block processing option for any vectorized function, allowing such calculations to be fully “RAM friendly”. The example below illustrates how to calculate NDVI from the same date set using the calc() function.</p>
+<pre class="r"><code>## Define the function to calculate NDVI from 
+ndvi.calc &lt;- function(x) {
+    ndvi &lt;- (x[[4]] - x[[3]]) / (x[[4]] + x[[3]])
+    return(ndvi)
+}
+ndvi2 &lt;- calc(x = landstat_example, fun = ndvi.calc)
+plot(ndvi2)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/ndvi_calc_outmemory-1.png" width="672" /></p>
+</div>
+<div id="high-level-functions" class="section level2">
+<h2><span class="header-section-number">5.2</span> High-level functions</h2>
+<p>Several <em>high level</em> functions (i.e. typical GIS software functions) have been implemented for <code>RasterLayer</code> objects. Examples are <code>contour()</code>, <code>focal()</code> (moving window), <code>clump()</code> (detect patches of connected cells), <code>zonal()</code> (zonal statistics), <code>terrain()</code> (slope, aspect and other terrain characteristics from dem), <code>(dis)aggregate</code> (change resolution)… See the help files for more detailed descriptions of each function. (also <code>calc</code> is actually a high level function).</p>
+<div class="bs-callout bs-callout-warning">
+<h4>
+REMEMBER:
+</h4>
+<p>These functions work equally well for raster data sets that cannot be loaded into memory!</p>
+</div>
+<p>As an example, converting the <code>grnt_bodem</code> raster to a binary mask with 0/1 values can be achieved by the <code>clump</code> function:</p>
+<pre class="r"><code>plot(clump(grnt_bodem), col = c(&quot;darkgreen&quot;))</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/man_clump-1.png" width="672" /></p>
+<p>Another GIS function worthwhile to mention, is the <strong>clipping if a raster with a vector layer</strong>, which is provided by the function <code>mask</code>:</p>
+<pre class="r"><code>library(rgdal)
+deelbekkens &lt;- readOGR(&quot;../data/deelbekkens/Deelbekken.shp&quot;)</code></pre>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\stijn_vanhoey\Documents\GitHub\course_gis_scripting\data\deelbekkens\Deelbekken.shp&quot;, layer: &quot;Deelbekken&quot;
+## with 102 features
+## It has 8 fields
+## Integer64 fields read as strings:  UIDN OIDN</code></pre>
+<pre class="r"><code>crs_wgs84 &lt;- CRS(&quot;+init=epsg:4326&quot;) 
+deelbekkens_wgs84 &lt;- spTransform(deelbekkens, crs_wgs84)
+r_data_crop &lt;- crop(r_data, deelbekkens_wgs84)
+r_data_mask &lt;- mask(r_data_crop, deelbekkens_wgs84)
+plot(r_data_mask)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/clip_mask-1.png" width="672" /></p>
+<div class="bs-callout bs-callout-info">
+<h4>
+Notice:
+</h4>
+<p>The <code>gdalwarp</code> functionality to crop a vector file can also be executed directly with GDAL from the command line. As such, similar to the <code>subprocess</code> trick in Python (<code>05-the-power-of-gdal.ipynb</code>) to run a GDAL command within Python as if it would be on the command line, this can be achieved by using <code>system()</code> (instead of <code>subprocess</code>).</p>
+</div>
+</div>
+</div>
+<div id="mapping-raster-data" class="section level1">
+<h1><span class="header-section-number">6</span> Mapping raster data</h1>
+<p>Actually, the <code>plot</code> function provided by the <code>raster</code> package (find specific help by executing <code>?raster::plot</code> in the console) provides a lot of functionality. Also other plot functions from the system R will work on the <code>Raster*</code> objects:</p>
+<pre class="r"><code>hist(r_example)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/plot_hist-1.png" width="672" /></p>
+<p>For multi-band files, the <code>plotRGB</code> provides the option to plot <em>false color composites</em>:</p>
+<pre class="r"><code>plotRGB(landstat_example, r = 5, g = 4, b = 3)</code></pre>
+<p><img src="08-gis-r-rasters_files/figure-html/read_brick_rgb-1.png" width="672" /></p>
+<div class="bs-callout bs-callout-info">
+<h4>
+Notice:
+</h4>
+<p>Another interesting package, is the <a href="https://oscarperpinan.github.io/rastervis/">rasterVis</a> package. The package provides a set of methods for enhanced visualization and interaction. Specifically the space-time plots are well designed.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

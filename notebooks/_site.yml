@@ -1,0 +1,21 @@
+name: "Introduction to GIS scripting"
+output_dir: "../docs/notebooks"
+include: ["static/"]
+exclude: ["*.ipynb"]
+navbar:
+  title: "Introduction to GIS R"
+  left:
+    - text: "Sessions"
+      menu:
+        - text: "R vector"
+          href: 07-gis-r-vectors.html
+        - text: "R raster"
+          href: 08-gis-r-rasters.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/stijnvanhoey/course_gis_scripting
+output:
+  html_document:
+    theme: yeti
+    df_print: paged
+    css: "static/css/inbo.css"

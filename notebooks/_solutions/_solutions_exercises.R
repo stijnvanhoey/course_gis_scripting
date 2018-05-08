@@ -64,7 +64,7 @@ plot(rasterize(lonlat, base_raster, fun = function(x,...)length(x)))
 
 ## @knitr exercise6
 # 6. Load an Arc/Info Binary Grid from file
-grnt_bodem <- raster("../data/grntbodem/")
+grnt_bodem <- raster("../data/grntbodem/hdr.adf")
 plot(grnt_bodem, col = bpy.colors(10))
 
 ## @knitr exercise7
