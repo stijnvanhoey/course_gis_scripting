@@ -331,6 +331,10 @@ The result provides the indices of the `SpatialPolygonDataFrame` together with t
 Check the vignette (`vignette('over')` in console) to get more details about all the different spatial JOIN options with the `sp` package. On the other hand, the `sf` package interface for spatial joins is more intuitive. This [point-in-polygon example](https://gist.github.com/stijnvanhoey/7b51017718834f150f781a256292904e#file-spatial_join-r) compares the `sp` and the `sf` implementation. 
 </div>
 
+<br><div class="alert alert-info">
+Notice that it is not always needed to download both data sets and do the spatial operation on your own machine. Some WFS Webservices (providing maps online) support spatial operators such as within, intersects, contains,... directly. As such, the point in polygon problem can be tackled directly as explained [in the tutorial [Download feature attributes from WFS](https://inbo-tutorials.netlify.com/spatial/wfs/). 
+</div>
+
 ## `rgeos` geometry operations
 
 The `rgeos` package provide a number of geometric operations, such as `gArea()`, `gLength()`, `gDistance()`, `gBuffer()`,... (single geometry) or `gIntersection()`, `gUnion()`, `gContains`,... (combining geometries). 
