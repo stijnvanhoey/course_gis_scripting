@@ -15,8 +15,8 @@ The course can be split up in three main sections:
   * [05-the-power-of-gdal.ipynb](./notebooks/05-the-power-of-gdal.ipynb)
   * [06-gis-python-rasters.ipynb](./notebooks/06-gis-python-rasters.ipynb)
 3. Introduction to R for GIS: introduction to some essential vector and raster packages in R, such as `sp`, `raster`, `ggmap`, ...
-  * [07-gis-r-vectors.Rmd](./notebooks/07-gis-r-vectors.Rmd)
-  * [08-gis-r-rasters.Rmd](./notebooks/08-gis-r-rasters.Rmd)
+  * [07-gis-r-vectors.Rmd](https://stijnvanhoey.github.io/course_gis_scripting/notebooks/07-gis-r-vectors.html)
+  * [08-gis-r-rasters.Rmd](https://stijnvanhoey.github.io/course_gis_scripting/notebooks/08-gis-r-rasters.html)
 
 The course notes for the hands-on sessions are available in the [notebook](./notebooks) folder. For the Python sections, Jupyter notebook is used, while the R course material is available as Rmarkdown notebook files. Check the [Github page](https://stijnvanhoey.github.io/course_gis_scripting/#1) for the slides. The individual presentations (stored in the [docs](./docs) folder) can be used as guiding presentations to explain the setup and flow of the course. Specific focus is given to the interaction of both languages to the OSGEO libraries (proj.4, geos and gdal), which has been illustrated hands-on o the command line during the course.
 
