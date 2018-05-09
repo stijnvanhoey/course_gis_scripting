@@ -410,13 +410,13 @@ r_example</code></pre>
 ## coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
 ## data source : in memory
 ## names       : layer 
-## values      : 1.117749, 9.933364  (min, max)</code></pre>
+## values      : 1.00307, 9.942678  (min, max)</code></pre>
 <pre class="r"><code>plot(r_example)</code></pre>
 <p><img src="08-gis-r-rasters_files/figure-html/layer_example_plot-1.png" width="672" /></p>
 <p>These <code>values</code> can be <code>sliced</code>, just as we would do with vectors and matrices:</p>
 <pre class="r"><code>values(r_example)[1:10]</code></pre>
-<pre><code>##  [1] 2.656854 9.384848 5.952935 6.133394 9.360611 6.568499 6.003830
-##  [8] 2.059721 4.094929 2.735926</code></pre>
+<pre><code>##  [1] 8.434002 1.673186 2.903345 8.621475 8.962932 6.403370 4.129534
+##  [8] 8.900143 4.838132 6.870831</code></pre>
 <p>An important feature of the <code>raster</code> package is the option to work <code>inMemory</code> or not:</p>
 <pre class="r"><code>inMemory(r_example)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
@@ -431,12 +431,12 @@ REMEMBER:
 <pre class="r"><code>xyz_example &lt;- rasterToPoints(r_example)
 head(xyz_example)</code></pre>
 <pre><code>##          x      y    layer
-## [1,] 4.445 51.375 2.656854
-## [2,] 4.495 51.375 9.384848
-## [3,] 4.545 51.375 5.952935
-## [4,] 4.595 51.375 6.133394
-## [5,] 4.645 51.375 9.360611
-## [6,] 4.695 51.375 6.568499</code></pre>
+## [1,] 4.445 51.375 8.434002
+## [2,] 4.495 51.375 1.673186
+## [3,] 4.545 51.375 2.903345
+## [4,] 4.595 51.375 8.621475
+## [5,] 4.645 51.375 8.962932
+## [6,] 4.695 51.375 6.403370</code></pre>
 <pre class="r"><code>plot(rasterFromXYZ(xyz_example))</code></pre>
 <p><img src="08-gis-r-rasters_files/figure-html/layer_xyz_to_raster-1.png" width="672" /></p>
 <p>However, in many occasions these XYZ combination are not provided on a regular grid. See the <code>rasterize</code> function for points that are <strong>not on a regular grid</strong>. An example of points that are not on a regular grid:</p>
@@ -478,8 +478,8 @@ plot(s_example)</code></pre>
 ## extent      : 4.42, 5.42, 50.9, 51.4  (xmin, xmax, ymin, ymax)
 ## coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
 ## names       :   layer.1,   layer.2,   layer.3 
-## min values  : 1.1177493, 1.2493634, 0.5588746 
-## max values  :  9.933364, 98.671717,  4.966682</code></pre>
+## min values  : 1.0030703, 1.0061501, 0.5015352 
+## max values  :  9.942678, 98.856836,  4.971339</code></pre>
 <p>Make sure you notice the additional <code>dimension</code> in the description (<code>nlayers</code>).</p>
 </div>
 <div id="projection" class="section level2">
@@ -497,7 +497,7 @@ r_reproject</code></pre>
 ## coord. ref. : +init=epsg:31370 +proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs 
 ## data source : in memory
 ## names       : layer 
-## values      : 1.224281, 10.10082  (min, max)</code></pre>
+## values      : 0.9594252, 9.641255  (min, max)</code></pre>
 <p>However, using the default parameters, we do not have control on the spatial resolution (dimensions) of the resulting reprojected raster. Setting the resolution provides more control:</p>
 <pre class="r"><code>r_reproject &lt;- projectRaster(r_example, crs = crs_lambert, 
                              res = 5000)
@@ -509,7 +509,7 @@ r_reproject</code></pre>
 ## coord. ref. : +init=epsg:31370 +proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs 
 ## data source : in memory
 ## names       : layer 
-## values      : 1.432891, 9.139092  (min, max)</code></pre>
+## values      : 1.346314, 9.209351  (min, max)</code></pre>
 <p>But is generally advised to project a raster to another <code>raster</code> object. By providing an existing <code>RasterLayer</code> object, your newly projected data perfectly aligns with it.</p>
 <pre class="r"><code># Create a base_layer to project data to
 base_raster &lt;- raster(ncol = 20, nrow = 10, 
