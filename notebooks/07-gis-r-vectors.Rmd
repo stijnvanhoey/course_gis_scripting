@@ -297,7 +297,7 @@ ogrInfo(dsn = "name_filegeodatabase.gdb")
 # List the names of the layers in the dataset
 ogrListLayers(dsn = "name_filegeodatabase.gdb")
 # Reading a specific layer
-readOGR(dsn = "name_filegeodatabase.gdb", layer = "layer_of_interest"
+readOGR(dsn = "name_filegeodatabase.gdb", layer = "layer_of_interest")
 ```
 
 # Vector data manipulation
